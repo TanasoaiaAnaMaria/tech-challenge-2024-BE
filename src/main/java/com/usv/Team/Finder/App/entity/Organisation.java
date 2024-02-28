@@ -22,6 +22,7 @@ public class Organisation {
 
     private String headquarterAddress;
 
+    @Column(length = 1024)
     private String registrationUrl;
 
     @OneToMany(

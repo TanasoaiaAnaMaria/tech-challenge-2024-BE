@@ -24,6 +24,10 @@ public class OrganisationService {
                 .build();
 
         Organisation organisationSaved = organisationRepository.save(organisation1);
+        String baseUrl = "http://yourapp.com/register/employee/";
+        String token = tokenService.generateEmployeeSignUpURL(organisationSaved.getIdOrganisation());
+        organisationSaved.setRegistrationUrl(baseUrl+token);
+        organisationRepository.save(organisationSaved);
 
         return organisationSaved.getIdOrganisation();
     }

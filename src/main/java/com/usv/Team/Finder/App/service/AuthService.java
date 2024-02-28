@@ -38,7 +38,7 @@ public class AuthService {
         this.tokenService = tokenService;
     }
 
-    public User registerUser(RegisterUserDto userDto) {
+    public User registerOrganisationAdmin(RegisterUserDto userDto) {
         UUID organisationId = organisationService.addOrganisation(new OrganisationDto(userDto.getOrganisationName(), userDto.getHeadquarterAddress()));
         String password = passwordEncoder.encode(userDto.getPassword());
         Optional<Role> role = roleRepository.findByAuthority("ORGANISATION_ADMIN");

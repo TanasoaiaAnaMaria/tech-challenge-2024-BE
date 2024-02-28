@@ -22,7 +22,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody RegisterUserDto userDto) {
-        return ResponseEntity.ok().body(authService.registerUser(userDto));
+        return ResponseEntity.ok().body(authService.registerOrganisationAdmin(userDto));
     }
 
     @PostMapping("/login")

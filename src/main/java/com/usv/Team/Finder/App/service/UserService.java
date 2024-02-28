@@ -25,22 +25,4 @@ public class UserService implements UserDetailsService {
         return userRepository.findByeMailAdress(eMailAdress).orElseThrow(()-> new UsernameNotFoundException("User not found :("));
     }
 
-//    public User addUser(UserDto userDto) {
-//        // Codificarea parolei
-//        String encodedPassword = passwordEncoder.encode(userDto.getPassword());
-//
-//        // Crearea și salvarea noului utilizator
-//        User user = User.builder()
-//                .firstName(userDto.getFirstName())
-//                .lastName(userDto.getLastName())
-//                .eMailAdress(userDto.getEMailAdress())
-//                .password(encodedPassword)
-//                .idOrganisation(userDto.getIdOrganisation())
-//                .authorities(userDto.getAuthorities())
-//                .build();
-//
-//        return userRepository.save(user);
-//    }
-
-
 }

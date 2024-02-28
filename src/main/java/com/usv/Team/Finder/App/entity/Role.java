@@ -1,12 +1,11 @@
 package com.usv.Team.Finder.App.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+
+import java.util.*;
 
 
 @NoArgsConstructor
@@ -15,9 +14,12 @@ import org.springframework.security.core.GrantedAuthority;
 public class Role implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID idRole;
 
     private String authority;
+    @JsonIgnore
+    @ManyToMany(mappedBy = "authorities")
+    private Set<User> users= new HashSet<>();
 
     public Role(String authority) {
         this.authority = authority;
