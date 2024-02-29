@@ -11,7 +11,7 @@ import java.util.UUID;
 @Builder
 @Data
 @AllArgsConstructor
-public class RegisterUserDto {
+public class RegisterEmployeeDto {
     private String firstName;
 
     private String lastName;
@@ -23,8 +23,4 @@ public class RegisterUserDto {
     private UUID idOrganisation;
 
     private Set<Role> authorities;
-
-    private String organisationName;
-
-    private String headquarterAddress;
 }

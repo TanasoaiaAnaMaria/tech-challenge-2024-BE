@@ -3,7 +3,8 @@ package com.usv.Team.Finder.App.controller;
 
 import com.usv.Team.Finder.App.dto.LoginResponseDto;
 import com.usv.Team.Finder.App.dto.LoginUserDto;
-import com.usv.Team.Finder.App.dto.RegisterUserDto;
+import com.usv.Team.Finder.App.dto.RegisterEmployeeDto;
+import com.usv.Team.Finder.App.dto.RegisterOrganisationAdminDto;
 import com.usv.Team.Finder.App.entity.User;
 import com.usv.Team.Finder.App.service.AuthService;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +22,13 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody RegisterUserDto userDto) {
-        return ResponseEntity.ok().body(authService.registerUser(userDto));
+    public ResponseEntity<User> register(@RequestBody RegisterOrganisationAdminDto userDto) {
+        return ResponseEntity.ok().body(authService.registerOrganisationAdmin(userDto));
+    }
+
+    @PostMapping("/register/employee")
+    public ResponseEntity<User> registerEmployee(@RequestBody RegisterEmployeeDto userDto) {
+        return ResponseEntity.ok().body(authService.registerEmployee(userDto));
     }
 
     @PostMapping("/login")
