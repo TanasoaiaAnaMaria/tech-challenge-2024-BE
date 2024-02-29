@@ -41,9 +41,8 @@ public class AuthService {
     public User registerUser(RegisterUserDto userDto) {
         UUID organisationId = organisationService.addOrganisation(new OrganisationDto(userDto.getOrganisationName(), userDto.getHeadquarterAddress()));
         String password = passwordEncoder.encode(userDto.getPassword());
-        Optional<Role> role = roleRepository.findByAuthority("ORGANISATION_ADMIN");
-        Set<Role> authorities = new HashSet<>();
-        role.ifPresent(authorities::add);
+        Role role = roleRepository.findByAuthority("ORGANIZATION_ADMIN").orElseGet(() -> roleRepository.save(new Role("ORGANIZATION_ADMIN")));
+        Set<Role> authorities = new HashSet<>(Collections.singletonList(role));
 
         User user = User.builder()
                 .firstName(userDto.getFirstName())
