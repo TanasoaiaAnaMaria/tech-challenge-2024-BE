@@ -24,12 +24,14 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody RegisterOrganisationAdminDto userDto) {
-        return ResponseEntity.ok().body(authService.registerOrganisationAdmin(userDto));
+        authService.registerOrganisationAdmin(userDto);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/register/employee")
     public ResponseEntity<User> registerEmployee(@RequestBody RegisterEmployeeDto userDto) {
-        return ResponseEntity.ok().body(authService.registerEmployee(userDto));
+        authService.registerEmployee(userDto);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/login")
