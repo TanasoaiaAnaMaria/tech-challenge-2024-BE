@@ -7,6 +7,7 @@ import com.usv.Team.Finder.App.dto.RegisterEmployeeDto;
 import com.usv.Team.Finder.App.dto.RegisterOrganisationAdminDto;
 import com.usv.Team.Finder.App.entity.User;
 import com.usv.Team.Finder.App.service.AuthService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,5 +35,11 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginUserDto userDto){
         return ResponseEntity.ok().body(authService.login(userDto));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<Void> resetPassword(@RequestBody LoginUserDto resetPassword) {
+        authService.resetPassword(resetPassword);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

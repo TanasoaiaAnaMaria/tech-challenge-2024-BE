@@ -5,6 +5,7 @@ import com.usv.Team.Finder.App.dto.*;
 import com.usv.Team.Finder.App.entity.Role;
 import com.usv.Team.Finder.App.entity.User;
 import com.usv.Team.Finder.App.exception.CrudOperationException;
+import com.usv.Team.Finder.App.repository.ApplicationConstants;
 import com.usv.Team.Finder.App.repository.OrganisationRepository;
 import com.usv.Team.Finder.App.repository.RoleRepository;
 import com.usv.Team.Finder.App.repository.UserRepository;
@@ -21,7 +22,6 @@ import java.util.*;
 @Service
 @Transactional
 public class AuthService {
-    public static final String MESAJ_DE_EROARE_ORGANISATION = "Organisation does not exist";
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final OrganisationService organisationService;
@@ -60,7 +60,7 @@ public class AuthService {
 
     public User registerEmployee(RegisterEmployeeDto userDto) {
         organisationRepository.findById(userDto.getIdOrganisation())
-                .orElseThrow(() -> new CrudOperationException(MESAJ_DE_EROARE_ORGANISATION));
+                .orElseThrow(() -> new CrudOperationException(ApplicationConstants.ERROR_MESSAGE_ORGANISATION));
 
         String password = passwordEncoder.encode(userDto.getPassword());
         Role role = roleRepository.findByAuthority("EMPLOYEE").orElseGet(() -> roleRepository.save(new Role("EMPLOYEE")));
@@ -87,5 +87,14 @@ public class AuthService {
         } catch (AuthenticationException e) {
             return new LoginResponseDto("");
         }
+    }
+
+    public void resetPassword(LoginUserDto userDto) {
+        User user = userRepository.findByeMailAdress(userDto.getEMailAdress())
+                .orElseThrow(() -> new CrudOperationException(ApplicationConstants.ERROR_MESSAGE_USER));
+
+        String newPassword = passwordEncoder.encode(userDto.getPassword());
+        user.setPassword(newPassword);
+        userRepository.save(user);
     }
 }
