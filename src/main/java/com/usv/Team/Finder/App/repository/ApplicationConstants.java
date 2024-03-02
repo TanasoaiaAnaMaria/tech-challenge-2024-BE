@@ -5,4 +5,6 @@ public interface ApplicationConstants {
     String REGISTRATION_EMPLOYEE_ALREADY_EXIST="Already registered";
     String ERROR_MESSAGE_ORGANISATION = "Organisation does not exist";
     String ERROR_MESSAGE_USER = "User does not exist";
+    String ERROR_MESSAGE_ROLE = "Role does not exist";
+
 }
