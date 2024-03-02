@@ -86,7 +86,7 @@ public class AuthService {
             invitation.setRegistered(true);
             invitationRepository.save(invitation);
         } else {
-            throw new RegistrationException(ApplicationConstants.REGISTRATION_EMPLOYEE_ALREADY_EXIST, HttpStatus.UNAUTHORIZED);
+            throw new RegistrationException(ApplicationConstants.REGISTRATION_EMPLOYEE_ALREADY_EXIST, HttpStatus.CONFLICT);
         }
 
         String password = passwordEncoder.encode(userDto.getPassword());
