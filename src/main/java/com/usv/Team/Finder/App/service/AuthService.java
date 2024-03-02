@@ -6,7 +6,9 @@ import com.usv.Team.Finder.App.entity.Invitation;
 import com.usv.Team.Finder.App.entity.Role;
 import com.usv.Team.Finder.App.entity.User;
 import com.usv.Team.Finder.App.exception.CrudOperationException;
+import com.usv.Team.Finder.App.exception.RegistrationException;
 import com.usv.Team.Finder.App.repository.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -76,14 +78,15 @@ public class AuthService {
 
         Invitation invitation = findValidInvitation(userDto.getEMailAdress(), userDto.getIdOrganisation());
         if (invitation == null) {
-            throw new RuntimeException(ApplicationConstants.REGISTRATION_EMPLOYEE_ERROR);
+            throw new RegistrationException(ApplicationConstants.REGISTRATION_EMPLOYEE_ERROR, HttpStatus.UNAUTHORIZED);
+
         }
 
         if (!invitation.isRegistered()) {
             invitation.setRegistered(true);
             invitationRepository.save(invitation);
         } else {
-            throw new RuntimeException(ApplicationConstants.REGISTRATION_EMPLOYEE_ALREADY_EXIST);
+            throw new RegistrationException(ApplicationConstants.REGISTRATION_EMPLOYEE_ALREADY_EXIST, HttpStatus.UNAUTHORIZED);
         }
 
         String password = passwordEncoder.encode(userDto.getPassword());
