@@ -35,15 +35,13 @@ public class TokenService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
 
-        // Cast Authentication principal la User pentru a accesa proprietățile specifice
         User user = (User) auth.getPrincipal();
 
         Organisation organisation = organisationRepository.findById(user.getIdOrganisation()).orElseThrow(() -> new CrudOperationException(MESAJ_DE_EROARE_ORGANISATION));
-        // Construire JwtClaimsSet cu informațiile utilizatorului
+
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
-                .subject(auth.getName())
                 .claim("userId", user.getIdUser())
                 .claim("firstName", user.getFirstName())
                 .claim("lastName", user.getLastName())
@@ -54,7 +52,6 @@ public class TokenService {
                 .claim("roles", scope)
                 .build();
 
-        System.out.println(claimsSet);
         return jwtEncoder.encode(JwtEncoderParameters.from(claimsSet)).getTokenValue();
     }
 
@@ -66,7 +63,6 @@ public class TokenService {
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
-                .subject(organisation.getOrganisationName())
                 .claim("idOrganisation", organisation.getIdOrganisation())
                 .claim("organisationName", organisation.getOrganisationName())
                 .claim("headquarterAddress", organisation.getHeadquarterAddress())

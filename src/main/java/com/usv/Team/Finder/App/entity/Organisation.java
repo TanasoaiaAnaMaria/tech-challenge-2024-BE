@@ -18,6 +18,7 @@ public class Organisation {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID idOrganisation;
 
+    @Column(unique = true)
     private String organisationName;
 
     private String headquarterAddress;
