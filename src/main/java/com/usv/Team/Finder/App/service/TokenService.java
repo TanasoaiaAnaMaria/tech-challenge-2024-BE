@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Service
 public class TokenService {
 
-    public static final String ORGANISATION_ERROR_MESAJ = "Nu exista organizatia";
+    public static final String MESAJ_DE_EROARE_ORGANISATION = "Organisation does not exist";
     private final JwtEncoder jwtEncoder;
     private final OrganisationRepository organisationRepository;
 
@@ -38,7 +38,7 @@ public class TokenService {
         // Cast Authentication principal la User pentru a accesa proprietățile specifice
         User user = (User) auth.getPrincipal();
 
-        Organisation organisation = organisationRepository.findById(user.getIdOrganisation()).orElseThrow(() -> new CrudOperationException(ORGANISATION_ERROR_MESAJ));
+        Organisation organisation = organisationRepository.findById(user.getIdOrganisation()).orElseThrow(() -> new CrudOperationException(MESAJ_DE_EROARE_ORGANISATION));
         // Construire JwtClaimsSet cu informațiile utilizatorului
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
                 .issuer("self")
@@ -61,7 +61,7 @@ public class TokenService {
     public String generateEmployeeSignUpURL(UUID organisationId) {
         Instant now = Instant.now();
 
-        Organisation organisation = organisationRepository.findById(organisationId).orElseThrow(() -> new CrudOperationException(ORGANISATION_ERROR_MESAJ));
+        Organisation organisation = organisationRepository.findById(organisationId).orElseThrow(() -> new CrudOperationException(MESAJ_DE_EROARE_ORGANISATION));
 
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
                 .issuer("self")

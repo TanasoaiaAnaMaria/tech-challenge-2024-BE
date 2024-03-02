@@ -1,12 +1,12 @@
 package com.usv.Team.Finder.App.service;
 
 
-import com.usv.Team.Finder.App.dto.LoginResponseDto;
-import com.usv.Team.Finder.App.dto.LoginUserDto;
-import com.usv.Team.Finder.App.dto.OrganisationDto;
-import com.usv.Team.Finder.App.dto.RegisterUserDto;
+import com.usv.Team.Finder.App.dto.*;
 import com.usv.Team.Finder.App.entity.Role;
 import com.usv.Team.Finder.App.entity.User;
+import com.usv.Team.Finder.App.exception.CrudOperationException;
+import com.usv.Team.Finder.App.repository.ApplicationConstants;
+import com.usv.Team.Finder.App.repository.OrganisationRepository;
 import com.usv.Team.Finder.App.repository.RoleRepository;
 import com.usv.Team.Finder.App.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,22 +28,24 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
+    private final OrganisationRepository organisationRepository;
 
-    public AuthService(UserRepository userRepository, RoleRepository roleRepository, OrganisationService organisationService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, TokenService tokenService) {
+    public AuthService(UserRepository userRepository, RoleRepository roleRepository, OrganisationService organisationService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, TokenService tokenService,
+                       OrganisationRepository organisationRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.organisationService = organisationService;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.tokenService = tokenService;
+        this.organisationRepository = organisationRepository;
     }
 
-    public User registerUser(RegisterUserDto userDto) {
+    public User registerOrganisationAdmin(RegisterOrganisationAdminDto userDto) {
         UUID organisationId = organisationService.addOrganisation(new OrganisationDto(userDto.getOrganisationName(), userDto.getHeadquarterAddress()));
         String password = passwordEncoder.encode(userDto.getPassword());
-        Optional<Role> role = roleRepository.findByAuthority("ORGANISATION_ADMIN");
-        Set<Role> authorities = new HashSet<>();
-        role.ifPresent(authorities::add);
+        Role role = roleRepository.findByAuthority("ORGANIZATION_ADMIN").orElseGet(() -> roleRepository.save(new Role("ORGANIZATION_ADMIN")));
+        Set<Role> authorities = new HashSet<>(Collections.singletonList(role));
 
         User user = User.builder()
                 .firstName(userDto.getFirstName())
@@ -51,6 +53,25 @@ public class AuthService {
                 .eMailAdress(userDto.getEMailAdress())
                 .password(password)
                 .idOrganisation(organisationId)
+                .authorities(authorities)
+                .build();
+        return userRepository.save(user);
+    }
+
+    public User registerEmployee(RegisterEmployeeDto userDto) {
+        organisationRepository.findById(userDto.getIdOrganisation())
+                .orElseThrow(() -> new CrudOperationException(ApplicationConstants.ERROR_MESSAGE_ORGANISATION));
+
+        String password = passwordEncoder.encode(userDto.getPassword());
+        Role role = roleRepository.findByAuthority("EMPLOYEE").orElseGet(() -> roleRepository.save(new Role("EMPLOYEE")));
+        Set<Role> authorities = new HashSet<>(Collections.singletonList(role));
+
+        User user = User.builder()
+                .firstName(userDto.getFirstName())
+                .lastName(userDto.getLastName())
+                .eMailAdress(userDto.getEMailAdress())
+                .password(password)
+                .idOrganisation(userDto.getIdOrganisation())
                 .authorities(authorities)
                 .build();
         return userRepository.save(user);
@@ -66,5 +87,14 @@ public class AuthService {
         } catch (AuthenticationException e) {
             return new LoginResponseDto("");
         }
+    }
+
+    public void resetPassword(LoginUserDto userDto) {
+        User user = userRepository.findByeMailAdress(userDto.getEMailAdress())
+                .orElseThrow(() -> new CrudOperationException(ApplicationConstants.ERROR_MESSAGE_USER));
+
+        String newPassword = passwordEncoder.encode(userDto.getPassword());
+        user.setPassword(newPassword);
+        userRepository.save(user);
     }
 }

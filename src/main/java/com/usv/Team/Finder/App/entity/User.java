@@ -48,6 +48,10 @@ public class User implements UserDetails {
     )
     private Set<Role> authorities;
 
+    private boolean isDepartmentManager;
+    private UUID idDepartment;
+
+
     public User(String eMailAdress, String password, Set<Role> authorities) {
         this.eMailAdress = eMailAdress;
         this.password = password;
