@@ -13,6 +13,5 @@ import java.util.UUID;
 public interface UserRepository extends CrudRepository<User, UUID> {
     Optional<User> findByeMailAdress(String eMailAdress);
     List<User> findByIdOrganisation(UUID idOrganisation);
-
     Optional<User> findByIdDepartmentAndIsDepartmentManager(UUID idDepartment, boolean isDepartmentManager);
 }
