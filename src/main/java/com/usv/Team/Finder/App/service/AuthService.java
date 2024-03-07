@@ -70,8 +70,6 @@ public class AuthService {
         return null;
     }
 
-
-
     public User registerEmployee(RegisterEmployeeDto userDto) {
         organisationRepository.findById(userDto.getIdOrganisation())
                 .orElseThrow(() -> new CrudOperationException(ApplicationConstants.ERROR_MESSAGE_ORGANISATION));
@@ -103,7 +101,6 @@ public class AuthService {
                 .build();
         return userRepository.save(user);
     }
-
 
     public LoginResponseDto login(LoginUserDto userDto) {
         try {

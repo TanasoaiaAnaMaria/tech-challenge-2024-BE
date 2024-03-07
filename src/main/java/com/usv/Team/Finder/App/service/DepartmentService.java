@@ -24,9 +24,11 @@ public class DepartmentService {
         List<Department> departments = new ArrayList<>();
 
         iterableDepartments.forEach(department -> departments.add(Department.builder()
+                .idDepartment(department.getIdDepartment())
                 .idOrganisation(department.getIdOrganisation())
                 .departmentName(department.getDepartmentName())
                 .departmentManager(department.getDepartmentManager())
+                .users(department.getUsers())
                 .build()));
 
         return departments;
@@ -66,5 +68,10 @@ public class DepartmentService {
             throw new CrudOperationException(ApplicationConstants.ERROR_MESSAGE_DEPARTMENT);
 
         departmentRepository.deleteById(idDepartment);
+    }
+
+    public void updateDepartmentManager(Department department, UUID idDepartmentManager){
+        department.setDepartmentManager(idDepartmentManager);
+        departmentRepository.save(department);
     }
 }
