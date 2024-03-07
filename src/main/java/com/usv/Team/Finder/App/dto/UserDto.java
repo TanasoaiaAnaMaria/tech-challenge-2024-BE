@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -12,6 +13,8 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 public class UserDto {
+    private UUID idUser;
+
     private String firstName;
 
     private String lastName;
@@ -22,5 +25,17 @@ public class UserDto {
 
     private UUID idOrganisation;
 
+    private String organisationName;
+
     private Set<Role> authorities;
+
+    private boolean isDepartmentManager;
+
+    private String departmentManagerName;
+
+    private UUID idDepartment;
+
+    private String departmentName;
+
+    private List<String> OrganisationAdminNames;
 }

@@ -7,7 +7,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/email") // Defineste baza caii pentru acest controller
+@RequestMapping("/email")
+@CrossOrigin("*")
 public class EmailController {
 
     private final JavaSmtpGmailSenderService senderService;
