@@ -39,7 +39,7 @@ public class User implements UserDetails {
     )
     private Set<Role> authorities;
 
-    private Boolean isDepartmentManager;
+    private Boolean isDepartmentManager = false;
 
     private UUID idDepartmentManager;
 

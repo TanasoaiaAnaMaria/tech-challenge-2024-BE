@@ -44,7 +44,7 @@ public class AuthService {
     }
 
     public void registerOrganisationAdmin(RegisterOrganisationAdminDto userDto) {
-        UUID organisationId = organisationService.addOrganisation(new OrganisationDto(userDto.getOrganisationName(), userDto.getHeadquarterAddress()));
+        UUID organisationId = organisationService.addOrganisation(new OrganisationDto(userDto.getOrganisationName(), userDto.getHeadquarterAddress(),null));
         String password = passwordEncoder.encode(userDto.getPassword());
         Role role = roleRepository.findByAuthority("ORGANIZATION_ADMIN").orElseGet(() -> roleRepository.save(new Role("ORGANIZATION_ADMIN")));
         Set<Role> authorities = new HashSet<>(Collections.singletonList(role));
@@ -56,6 +56,7 @@ public class AuthService {
                 .password(password)
                 .idOrganisation(organisationId)
                 .authorities(authorities)
+                .isDepartmentManager(false)
                 .build();
         userRepository.save(user);
     }
@@ -99,6 +100,7 @@ public class AuthService {
                 .password(password)
                 .idOrganisation(userDto.getIdOrganisation())
                 .authorities(authorities)
+                .isDepartmentManager(false)
                 .build();
         userRepository.save(user);
     }

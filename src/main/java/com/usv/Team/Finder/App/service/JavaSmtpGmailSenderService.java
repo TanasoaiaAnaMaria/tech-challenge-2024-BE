@@ -84,7 +84,7 @@ public class JavaSmtpGmailSenderService {
         System.out.println("Email sent to " + toEmail);
     }
 
-    @Scheduled(cron = "0 * * * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     public void expireInvitations() {
         System.out.println("rulat");
         LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7);

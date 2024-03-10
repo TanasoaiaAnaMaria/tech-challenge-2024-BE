@@ -11,4 +11,6 @@ public class OrganisationDto {
     private String organisationName;
 
     private String headquarterAddress;
+
+    private String registrationUrl;
 }
