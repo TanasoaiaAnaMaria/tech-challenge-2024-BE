@@ -43,7 +43,7 @@ public class AuthService {
         this.organisationRepository = organisationRepository;
     }
 
-    public User registerOrganisationAdmin(RegisterOrganisationAdminDto userDto) {
+    public void registerOrganisationAdmin(RegisterOrganisationAdminDto userDto) {
         UUID organisationId = organisationService.addOrganisation(new OrganisationDto(userDto.getOrganisationName(), userDto.getHeadquarterAddress()));
         String password = passwordEncoder.encode(userDto.getPassword());
         Role role = roleRepository.findByAuthority("ORGANIZATION_ADMIN").orElseGet(() -> roleRepository.save(new Role("ORGANIZATION_ADMIN")));
@@ -57,7 +57,7 @@ public class AuthService {
                 .idOrganisation(organisationId)
                 .authorities(authorities)
                 .build();
-        return userRepository.save(user);
+        userRepository.save(user);
     }
     private Invitation findValidInvitation(String email, UUID idOrganisation) {
         List<Invitation> invitations = invitationRepository.findAllByIdOrganisation(idOrganisation);
@@ -70,14 +70,15 @@ public class AuthService {
         return null;
     }
 
-    public User registerEmployee(RegisterEmployeeDto userDto) {
+    public void registerEmployee(RegisterEmployeeDto userDto) {
         organisationRepository.findById(userDto.getIdOrganisation())
                 .orElseThrow(() -> new CrudOperationException(ApplicationConstants.ERROR_MESSAGE_ORGANISATION));
 
         Invitation invitation = findValidInvitation(userDto.getEMailAdress(), userDto.getIdOrganisation());
-        if (invitation == null) {
-            throw new RegistrationException(ApplicationConstants.REGISTRATION_EMPLOYEE_ERROR, HttpStatus.UNAUTHORIZED);
-
+        if (invitation == null || invitation.isExpired()) {
+            throw new RegistrationException(invitation != null && invitation.isExpired() ?
+                    ApplicationConstants.REGISTRATION_INVITATION_EXPIRED_ERROR :
+                    ApplicationConstants.REGISTRATION_EMPLOYEE_ERROR, HttpStatus.UNAUTHORIZED);
         }
 
         if (!invitation.isRegistered()) {
@@ -99,7 +100,7 @@ public class AuthService {
                 .idOrganisation(userDto.getIdOrganisation())
                 .authorities(authorities)
                 .build();
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     public LoginResponseDto login(LoginUserDto userDto) {

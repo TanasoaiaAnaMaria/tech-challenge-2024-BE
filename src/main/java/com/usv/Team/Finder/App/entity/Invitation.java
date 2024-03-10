@@ -3,6 +3,7 @@ package com.usv.Team.Finder.App.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -23,5 +24,9 @@ public class Invitation {
 
     private String emailEmployee;
 
+    private LocalDateTime sentDate;
+
     private boolean registered = false;
+
+    private boolean expired = false;
 }
