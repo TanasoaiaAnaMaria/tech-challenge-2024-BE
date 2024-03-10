@@ -51,4 +51,10 @@ public class RoleService {
 
         roleRepository.deleteById(idRole);
     }
+
+    public Role getRoleByAuthority(String authority) {
+        return roleRepository.findByAuthority(authority)
+                .orElseThrow(() -> new RuntimeException("Role not found with authority: " + authority));
+    }
+
 }

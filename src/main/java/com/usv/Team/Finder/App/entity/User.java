@@ -2,10 +2,8 @@ package com.usv.Team.Finder.App.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
 
@@ -41,9 +39,11 @@ public class User implements UserDetails {
     )
     private Set<Role> authorities;
 
-    private boolean isDepartmentManager;
-    private UUID idDepartment;
+    private Boolean isDepartmentManager;
 
+    private UUID idDepartmentManager;
+
+    private UUID idDepartment;
 
     public User(String eMailAdress, String password, Set<Role> authorities) {
         this.eMailAdress = eMailAdress;
@@ -52,7 +52,7 @@ public class User implements UserDetails {
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public Set<Role> getAuthorities() {
         return authorities;
     }
 
