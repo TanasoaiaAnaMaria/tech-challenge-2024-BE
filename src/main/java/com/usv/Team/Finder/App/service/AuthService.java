@@ -46,7 +46,7 @@ public class AuthService {
     public void registerOrganisationAdmin(RegisterOrganisationAdminDto userDto) {
         Optional<User> existingUser = userRepository.findByeMailAdress(userDto.getEMailAdress());
         if (existingUser.isPresent()) {
-            throw new CrudOperationException(ApplicationConstants.EMAIL_ALREADY_EXISTS);
+            throw new RegistrationException(ApplicationConstants.EMAIL_ALREADY_EXISTS, HttpStatus.UNAUTHORIZED);
         }
 
         UUID organisationId = organisationService.addOrganisation(new OrganisationDto(userDto.getOrganisationName(), userDto.getHeadquarterAddress(),null));
