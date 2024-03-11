@@ -38,4 +38,6 @@ public class UserDto {
     private String departmentName;
 
     private List<String> OrganisationAdminNames;
+
+    private String registrationUrl;
 }
