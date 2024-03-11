@@ -1,0 +1,28 @@
+pool: 'default'
+
+jobs:
+- job: Deploy
+  displayName: Maven Package and Publish Artifacts
+  steps:
+  - task: Maven@3
+    displayName: 'Maven Package'
+    inputs:
+      mavenPomFile: 'pom.xml'
+  
+  - task: ArchiveFiles@2
+    displayName: 'Archive files'
+    inputs:
+      rootFolderOrFile: '$(projectRoot)/target'
+      includeRootFolder: false
+      archiveType: zip
+      archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+      replaceExistingArchive: true
+
+
+  - task: AzureWebApp@1
+    displayName: 'Deploy Azure Web App'
+    inputs:
+      azureSubscription: 'the-penguins-service-connection'
+      appType: 'webAppLinux'
+      appName: "atc-2024-thepenguins-be-linux-web-app"
+      package: '$(Pipeline.Workspace)/**/target/*.?(war|jar)'
