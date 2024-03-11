@@ -44,6 +44,11 @@ public class AuthService {
     }
 
     public void registerOrganisationAdmin(RegisterOrganisationAdminDto userDto) {
+        Optional<User> existingUser = userRepository.findByeMailAdress(userDto.getEMailAdress());
+        if (existingUser.isPresent()) {
+            throw new RegistrationException(ApplicationConstants.EMAIL_ALREADY_EXISTS, HttpStatus.UNAUTHORIZED);
+        }
+
         UUID organisationId = organisationService.addOrganisation(new OrganisationDto(userDto.getOrganisationName(), userDto.getHeadquarterAddress(),null));
         String password = passwordEncoder.encode(userDto.getPassword());
         Role role = roleRepository.findByAuthority("ORGANIZATION_ADMIN").orElseGet(() -> roleRepository.save(new Role("ORGANIZATION_ADMIN")));
