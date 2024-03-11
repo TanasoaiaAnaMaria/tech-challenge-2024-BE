@@ -8,16 +8,6 @@ jobs:
     displayName: 'Maven Package'
     inputs:
       mavenPomFile: 'pom.xml'
-  
-  - task: ArchiveFiles@2
-    displayName: 'Archive files'
-    inputs:
-      rootFolderOrFile: '$(projectRoot)/target'
-      includeRootFolder: false
-      archiveType: zip
-      archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-      replaceExistingArchive: true
-
 
   - task: AzureWebApp@1
     displayName: 'Deploy Azure Web App'
