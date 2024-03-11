@@ -26,14 +26,15 @@ public class OrganisationService {
         return OrganisationDto.builder()
                 .organisationName(organisation.getOrganisationName())
                 .headquarterAddress(organisation.getHeadquarterAddress())
+                .registrationUrl(organisation.getRegistrationUrl())
                 .build();
     }
 
-    private Organisation updateRegistrationUrl(Organisation organisation) {
+    private void updateRegistrationUrl(Organisation organisation) {
         String baseUrl = "http://localhost:3000/register/employee/";
         String token = tokenService.generateEmployeeSignUpURL(organisation.getIdOrganisation());
         organisation.setRegistrationUrl(baseUrl + token);
-        return organisationRepository.save(organisation); // Salvăm și returnăm organizația actualizată
+        organisationRepository.save(organisation);
     }
 
     public UUID addOrganisation(OrganisationDto organisationDto) {

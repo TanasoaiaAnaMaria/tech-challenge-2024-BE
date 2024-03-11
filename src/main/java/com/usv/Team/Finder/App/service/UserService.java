@@ -1,11 +1,11 @@
 package com.usv.Team.Finder.App.service;
 
+import com.usv.Team.Finder.App.dto.OrganisationDto;
 import com.usv.Team.Finder.App.dto.UserDto;
 import com.usv.Team.Finder.App.entity.Department;
 import com.usv.Team.Finder.App.entity.Role;
 import com.usv.Team.Finder.App.entity.User;
 import com.usv.Team.Finder.App.exception.CrudOperationException;
-import com.usv.Team.Finder.App.exception.GlobalExceptionHandler;
 import com.usv.Team.Finder.App.repository.ApplicationConstants;
 import com.usv.Team.Finder.App.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -69,11 +69,20 @@ public class UserService implements UserDetailsService {
     public UserDto getUserById(UUID idUser){
         User user = userRepository.findById(idUser).orElseThrow(() ->
                 new CrudOperationException(ApplicationConstants.ERROR_MESSAGE_USER));
+        OrganisationDto organisation = organisationService.getOrganisationById(user.getIdOrganisation());
 
         List<String> organisationAdminNames = null;
         organisationAdminNames = getOrganisationAdminNames(user.getIdOrganisation());
         String departmentName = getDepartmentName(user.getIdDepartment());
         String departmentManagerName = getDepartmentManagerName(user.getIdDepartment());
+
+        String registrationUrl = null;
+        for (Role role : user.getAuthorities()) {
+            if ("ORGANIZATION_ADMIN".equals(role.getAuthority())) {
+                registrationUrl = organisation.getRegistrationUrl();
+                break;
+            }
+        }
 
         return UserDto.builder()
                 .idUser(user.getIdUser())
@@ -81,13 +90,14 @@ public class UserService implements UserDetailsService {
                 .lastName(user.getLastName())
                 .eMailAdress(user.getEMailAdress())
                 .idOrganisation(user.getIdOrganisation())
-                .organisationName(organisationService.getOrganisationById(user.getIdOrganisation()).getOrganisationName())
+                .organisationName(organisation.getOrganisationName())
                 .authorities(user.getAuthorities())
                 .isDepartmentManager(user.getIsDepartmentManager())
                 .departmentManagerName(departmentManagerName)
                 .idDepartment(user.getIdDepartment())
                 .departmentName(departmentName)
                 .OrganisationAdminNames(organisationAdminNames)
+                .registrationUrl(registrationUrl)
                 .build();
     }
 
