@@ -2,6 +2,7 @@ package com.usv.Team.Finder.App.repository;
 
 public interface ApplicationConstants {
     String REGISTRATION_EMPLOYEE_ERROR = "Invitation not found or invalid";
+    String EMAIL_ALREADY_EXISTS = "E-mail address already in use";
     String REGISTRATION_INVITATION_EXPIRED_ERROR = "Invitation expired. Contact your organisation admin.";
     String REGISTRATION_EMPLOYEE_ALREADY_EXIST="Already registered";
     String ERROR_MESSAGE_ORGANISATION = "Organisation does not exist";
