@@ -81,7 +81,7 @@ public class UserService implements UserDetailsService {
 
         String registrationUrl = null;
         for (Role role : user.getAuthorities()) {
-            if ("ORGANIZATION_ADMIN".equals(role.getAuthority())) {
+            if ("ORGANISATION_ADMIN".equals(role.getAuthority())) {
                 registrationUrl = organisation.getRegistrationUrl();
                 break;
             }
@@ -225,7 +225,7 @@ public class UserService implements UserDetailsService {
 
         for (User user : usersInOrganisation) {
             for (Role authority : user.getAuthorities()) {
-                if ("ORGANIZATION_ADMIN".equals(authority.getAuthority())) {
+                if ("ORGANISATION_ADMIN".equals(authority.getAuthority())) {
                     String fullName = user.getFirstName() + " " + user.getLastName();
                     organisationAdminNames.add(fullName);
                 }
