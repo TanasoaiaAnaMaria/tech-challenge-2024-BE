@@ -47,13 +47,16 @@ public class UserService implements UserDetailsService {
             String departmentName = getDepartmentName(user.getIdDepartment());
             String departmentManagerName = getDepartmentManagerName(user.getIdDepartment());
 
+            OrganisationDto organisation =  organisationService.getOrganisationById(user.getIdOrganisation());
+
             users.add(UserDto.builder()
                     .idUser(user.getIdUser())
                     .firstName(user.getFirstName())
                     .lastName(user.getLastName())
                     .eMailAdress(user.getEMailAdress())
                     .idOrganisation(user.getIdOrganisation())
-                    .organisationName(organisationService.getOrganisationById(user.getIdOrganisation()).getOrganisationName())
+                    .organisationName(organisation.getOrganisationName())
+                    .organisationHeadquarterAddress(organisation.getHeadquarterAddress())
                     .authorities(user.getAuthorities())
                     .isDepartmentManager(user.getIsDepartmentManager())
                     .departmentManagerName(departmentManagerName)
@@ -91,6 +94,7 @@ public class UserService implements UserDetailsService {
                 .eMailAdress(user.getEMailAdress())
                 .idOrganisation(user.getIdOrganisation())
                 .organisationName(organisation.getOrganisationName())
+                .organisationHeadquarterAddress(organisation.getHeadquarterAddress())
                 .authorities(user.getAuthorities())
                 .isDepartmentManager(user.getIsDepartmentManager())
                 .departmentManagerName(departmentManagerName)
