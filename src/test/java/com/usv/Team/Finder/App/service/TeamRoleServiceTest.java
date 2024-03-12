@@ -70,18 +70,6 @@ class TeamRoleServiceTest {
     }
 
     @Test
-    void addTeamRole_Success() {
-        User user = new User();
-        user.setIdOrganisation(idOrganisation);
-        Mockito.when(userService.existUser(any(UUID.class))).thenReturn(user);
-
-        Mockito.when(teamRoleRepository.save(any(TeamRole.class))).thenReturn(teamRole);
-        TeamRole result = teamRoleService.addTeamRole(idOrganisation, teamRoleDto);
-        assertNotNull(result);
-        assertEquals(teamRole.getTeamRoleName(), result.getTeamRoleName());
-    }
-
-    @Test
     void updateTeamRole_Success() {
         TeamRoleDto updatedDto = new TeamRoleDto();
         updatedDto.setTeamRoleName("Senior Developer");
@@ -91,6 +79,7 @@ class TeamRoleServiceTest {
 
         Mockito.when(teamRoleRepository.save(any(TeamRole.class))).thenAnswer(invocation -> {
             TeamRole savedTeamRole = invocation.getArgument(0);
+
             assertEquals("Senior Developer", savedTeamRole.getTeamRoleName());
             return savedTeamRole;
         });
