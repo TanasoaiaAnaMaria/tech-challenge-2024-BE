@@ -2,9 +2,12 @@ package com.usv.Team.Finder.App.service;
 
 import com.usv.Team.Finder.App.dto.DepartmentDto;
 import com.usv.Team.Finder.App.entity.Department;
+import com.usv.Team.Finder.App.entity.User;
 import com.usv.Team.Finder.App.exception.CrudOperationException;
+import com.usv.Team.Finder.App.exception.FunctionalException;
 import com.usv.Team.Finder.App.repository.ApplicationConstants;
 import com.usv.Team.Finder.App.repository.DepartmentRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,12 +18,16 @@ import java.util.UUID;
 public class DepartmentService {
     private final DepartmentRepository departmentRepository;
 
-    public DepartmentService(DepartmentRepository departmentRepository) {
+    private final OrganisationService organisationService;
+    private final UserService userService;
+    public DepartmentService(DepartmentRepository departmentRepository, OrganisationService organisationService, UserService userService) {
         this.departmentRepository = departmentRepository;
+        this.organisationService = organisationService;
+        this.userService = userService;
     }
 
-    public List<Department> getDepartments(){
-        Iterable<Department> iterableDepartments = departmentRepository.findAll();
+    public List<Department> getDepartments(UUID idOrganisation){
+        Iterable<Department> iterableDepartments = departmentRepository.findByIdOrganisation(idOrganisation);
         List<Department> departments = new ArrayList<>();
 
         iterableDepartments.forEach(department -> departments.add(Department.builder()
@@ -40,7 +47,14 @@ public class DepartmentService {
 
     }
 
-    public Department addDepartment(DepartmentDto departmentDto){
+    public Department addDepartment(UUID idOrganisationAdmin, DepartmentDto departmentDto){
+        organisationService.getOrganisationById(departmentDto.getIdOrganisation());
+
+        User user = userService.existUser(idOrganisationAdmin);
+        if(!user.getIdOrganisation().equals(departmentDto.getIdOrganisation()))
+            throw new FunctionalException(ApplicationConstants.ERROR_NO_RIGHTS, HttpStatus.CONFLICT);
+
+
         Department department = Department.builder()
                 .idOrganisation(departmentDto.getIdOrganisation())
                 .departmentName(departmentDto.getDepartmentName())
@@ -55,7 +69,9 @@ public class DepartmentService {
         Department existingDepartment =  departmentRepository.findById(idDepartment).orElseThrow(()->
                 new CrudOperationException(ApplicationConstants.ERROR_MESSAGE_DEPARTMENT));
 
-        existingDepartment.setIdOrganisation(departmentDto.getIdOrganisation());
+        if(!existingDepartment.getIdOrganisation().equals(departmentDto.getIdOrganisation()))
+            throw new FunctionalException(ApplicationConstants.ERROR_NO_RIGHTS, HttpStatus.CONFLICT);
+
         existingDepartment.setDepartmentName(departmentDto.getDepartmentName());
         existingDepartment.setDepartmentManager(departmentDto.getDepartmentManager());
 
