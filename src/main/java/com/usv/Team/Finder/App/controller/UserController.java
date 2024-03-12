@@ -2,6 +2,7 @@ package com.usv.Team.Finder.App.controller;
 
 import com.usv.Team.Finder.App.dto.UserDto;
 import com.usv.Team.Finder.App.entity.Department;
+import com.usv.Team.Finder.App.entity.User;
 import com.usv.Team.Finder.App.exception.CrudOperationException;
 import com.usv.Team.Finder.App.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,13 @@ public class UserController {
         } catch (CrudOperationException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/getUsersPerDepartment")
+    @PreAuthorize("hasRole('ORGANISATION_ADMIN')")
+    public ResponseEntity<List<User>> getUsersPerDepartment(@RequestParam UUID idDepartment) {
+        List<User> users = userService.getUsersPerDepartment(idDepartment);
+        return ResponseEntity.ok(users);
     }
 
     @PutMapping("/addRole")
@@ -85,7 +93,7 @@ public class UserController {
     }
 
     @PutMapping("/assignUserToDepartment")
-    @PreAuthorize("hasRole('ORGANISATION_ADMIN')")
+    @PreAuthorize("hasAnyRole('ORGANISATION_ADMIN','DEPARTMENT_MANAGER')")
     public ResponseEntity<?> assignUserToDepartment(@RequestParam UUID idUser, @RequestParam UUID idDepartment) {
         try {
             userService.assignUserToDepartment(idUser, idDepartment);

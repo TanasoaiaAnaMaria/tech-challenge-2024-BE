@@ -6,8 +6,10 @@ import com.usv.Team.Finder.App.entity.Department;
 import com.usv.Team.Finder.App.entity.Role;
 import com.usv.Team.Finder.App.entity.User;
 import com.usv.Team.Finder.App.exception.CrudOperationException;
+import com.usv.Team.Finder.App.exception.FunctionalException;
 import com.usv.Team.Finder.App.repository.ApplicationConstants;
 import com.usv.Team.Finder.App.repository.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -108,6 +110,19 @@ public class UserService implements UserDetailsService {
     public User existUser(UUID idUser){
         return userRepository.findById(idUser).orElseThrow(() ->
                 new CrudOperationException(ApplicationConstants.ERROR_MESSAGE_USER));
+    }
+
+    public List<User> getUsersPerDepartment(UUID idDepartment) {
+        if (idDepartment == null) {
+            throw new FunctionalException(ApplicationConstants.ERROR_NULL_PARAMETER, HttpStatus.BAD_REQUEST);
+        }
+
+        departmentService.getDepartmentById(idDepartment);
+        List<User> usersInDepartment = userRepository.findByIdDepartment(idDepartment);
+
+        return usersInDepartment.stream()
+                .map(user -> existUser(user.getIdUser()))
+                .collect(Collectors.toList());
     }
 
     public void addUserRole(UUID idUser, Long idRole) {
