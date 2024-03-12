@@ -114,4 +114,15 @@ public class UserController {
         userService.addDepartmentManager(idUser, idDepartment);
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping("/removeDepartmentManagerFromDepartment")
+    @PreAuthorize("hasRole('ORGANISATION_ADMIN')")
+    public ResponseEntity<UserDto> removeDepartmentManagerFromDepartment(@RequestParam UUID idUser) {
+        try {
+            userService.removeDepartmentManagerFromDepartment(idUser);
+            return ResponseEntity.ok().build();
+        } catch (CrudOperationException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 }

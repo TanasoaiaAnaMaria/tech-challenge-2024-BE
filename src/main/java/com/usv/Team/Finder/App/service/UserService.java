@@ -192,6 +192,13 @@ public class UserService implements UserDetailsService {
         departmentService.updateDepartmentManager(department, newManager.getIdUser());
     }
 
+    public void removeDepartmentManagerFromDepartment(UUID userId) {
+        User employee = existUser(userId);
+        employee.setIdDepartment(null);
+        employee.setIsDepartmentManager(false);
+        userRepository.save(employee);
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////
 
     public void deasignDepartmentManager(User user){
