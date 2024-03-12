@@ -7,6 +7,7 @@ import com.usv.Team.Finder.App.exception.CrudOperationException;
 import com.usv.Team.Finder.App.exception.FunctionalException;
 import com.usv.Team.Finder.App.repository.ApplicationConstants;
 import com.usv.Team.Finder.App.repository.DepartmentRepository;
+import com.usv.Team.Finder.App.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +18,12 @@ import java.util.UUID;
 @Service
 public class DepartmentService {
     private final DepartmentRepository departmentRepository;
-
     private final OrganisationService organisationService;
-    private final UserService userService;
-    public DepartmentService(DepartmentRepository departmentRepository, OrganisationService organisationService, UserService userService) {
+    private final UserRepository userRepository;
+    public DepartmentService(DepartmentRepository departmentRepository, OrganisationService organisationService, UserRepository userRepository) {
         this.departmentRepository = departmentRepository;
         this.organisationService = organisationService;
-        this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     public List<Department> getDepartments(UUID idOrganisation){
@@ -50,7 +50,8 @@ public class DepartmentService {
     public Department addDepartment(UUID idOrganisationAdmin, DepartmentDto departmentDto){
         organisationService.getOrganisationById(departmentDto.getIdOrganisation());
 
-        User user = userService.existUser(idOrganisationAdmin);
+        User user = userRepository.findById(idOrganisationAdmin).orElseThrow(() ->
+                new CrudOperationException(ApplicationConstants.ERROR_MESSAGE_USER));
         if(!user.getIdOrganisation().equals(departmentDto.getIdOrganisation()))
             throw new FunctionalException(ApplicationConstants.ERROR_NO_RIGHTS, HttpStatus.CONFLICT);
 
