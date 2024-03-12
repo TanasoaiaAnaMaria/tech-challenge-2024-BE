@@ -14,4 +14,5 @@ public interface ApplicationConstants {
     String ERROR_ROLE_NOT_FOUND_FOR_USER = "Specified role not found for user.";
     String ERROR_USER_ALREADY_ASSIGNED_TO_A_DEPARTMENT = "User is already assigned to a department";
     String ERROR_NO_RIGHTS = "You have no rights to add entities to another organisation";
+    String ERROR_NULL_PARAMETER = "The received parameter must not be null";
 }

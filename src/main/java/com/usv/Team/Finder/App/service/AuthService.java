@@ -51,7 +51,7 @@ public class AuthService {
 
         UUID organisationId = organisationService.addOrganisation(new OrganisationDto(userDto.getOrganisationName(), userDto.getHeadquarterAddress(),null));
         String password = passwordEncoder.encode(userDto.getPassword());
-        Role role = roleRepository.findByAuthority("ORGANIZATION_ADMIN").orElseGet(() -> roleRepository.save(new Role("ORGANIZATION_ADMIN")));
+        Role role = roleRepository.findByAuthority("ORGANISATION_ADMIN").orElseGet(() -> roleRepository.save(new Role("ORGANISATION_ADMIN")));
         Set<Role> authorities = new HashSet<>(Collections.singletonList(role));
 
         User user = User.builder()

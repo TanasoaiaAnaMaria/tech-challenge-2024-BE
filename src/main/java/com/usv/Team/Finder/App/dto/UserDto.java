@@ -27,6 +27,8 @@ public class UserDto {
 
     private String organisationName;
 
+    private String organisationHeadquarterAddress;
+
     private Set<Role> authorities;
 
     private boolean isDepartmentManager;
