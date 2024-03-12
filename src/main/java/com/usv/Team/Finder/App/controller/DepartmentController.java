@@ -24,16 +24,16 @@ public class DepartmentController {
 
     @GetMapping("/getAll")
     @PreAuthorize("hasRole('ORGANISATION_ADMIN')")
-    public ResponseEntity<List<Department>> getAllDepartments(){
-        List<Department> departments = departmentService.getDepartments();
+    public ResponseEntity<List<Department>> getAllDepartments(@RequestParam UUID idOrganisation){
+        List<Department> departments = departmentService.getDepartments(idOrganisation);
         return ResponseEntity.ok(departments);
     }
 
     @GetMapping("/getById")
     @PreAuthorize("hasAnyRole('ORGANISATION_ADMIN','DEPARTMENT_MANAGER')")
-    public ResponseEntity<Department> getDepartmentById(@RequestParam UUID id){
+    public ResponseEntity<Department> getDepartmentById(@RequestParam UUID idDepartment){
         try {
-            Department department = departmentService.getDepartmentById(id);
+            Department department = departmentService.getDepartmentById(idDepartment);
             return ResponseEntity.ok(department);
         } catch (CrudOperationException e) {
             return ResponseEntity.notFound().build();
@@ -42,8 +42,8 @@ public class DepartmentController {
 
     @PostMapping("/addDepartment")
     @PreAuthorize("hasRole('ORGANISATION_ADMIN')")
-    public ResponseEntity<Department> addDepartment(@RequestBody DepartmentDto departmentDto){
-        Department department = departmentService.addDepartment(departmentDto);
+    public ResponseEntity<Department> addDepartment(@RequestParam UUID idOrganisationAdmin, @RequestBody DepartmentDto departmentDto){
+        Department department = departmentService.addDepartment(idOrganisationAdmin, departmentDto);
         return new ResponseEntity<>(department, HttpStatus.CREATED);
     }
 

@@ -40,7 +40,7 @@ class AuthServiceTest {
     @Test
     void registerOrganisationAdmin_Success() {
         // Setup
-        Set<Role> roles = new HashSet<>(Collections.singletonList(new Role("ORGANIZATION_ADMIN")));
+        Set<Role> roles = new HashSet<>(Collections.singletonList(new Role("ORGANISATION_ADMIN")));
         RegisterOrganisationAdminDto dto = new RegisterOrganisationAdminDto("John", "Doe", "john@example.com", "password", roles, "OrgName", "HQ Address");
         when(organisationService.addOrganisation(any(OrganisationDto.class))).thenReturn(UUID.randomUUID());
         when(passwordEncoder.encode(dto.getPassword())).thenReturn("encodedPassword");
