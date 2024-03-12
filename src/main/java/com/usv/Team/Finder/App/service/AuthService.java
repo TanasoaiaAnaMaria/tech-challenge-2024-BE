@@ -43,7 +43,7 @@ public class AuthService {
         this.organisationRepository = organisationRepository;
     }
 
-    public void registerOrganisationAdmin(RegisterOrganisationAdminDto userDto) {
+    public User registerOrganisationAdmin(RegisterOrganisationAdminDto userDto) {
         Optional<User> existingUser = userRepository.findByeMailAdress(userDto.getEMailAdress());
         if (existingUser.isPresent()) {
             throw new RegistrationException(ApplicationConstants.EMAIL_ALREADY_EXISTS, HttpStatus.UNAUTHORIZED);
@@ -64,6 +64,7 @@ public class AuthService {
                 .isDepartmentManager(false)
                 .build();
         userRepository.save(user);
+        return user;
     }
     private Invitation findValidInvitation(String email, UUID idOrganisation) {
         List<Invitation> invitations = invitationRepository.findAllByIdOrganisation(idOrganisation);
@@ -76,7 +77,7 @@ public class AuthService {
         return null;
     }
 
-    public void registerEmployee(RegisterEmployeeDto userDto) {
+    public User registerEmployee(RegisterEmployeeDto userDto) {
         organisationRepository.findById(userDto.getIdOrganisation())
                 .orElseThrow(() -> new CrudOperationException(ApplicationConstants.ERROR_MESSAGE_ORGANISATION));
 
@@ -108,6 +109,7 @@ public class AuthService {
                 .isDepartmentManager(false)
                 .build();
         userRepository.save(user);
+        return user;
     }
 
     public LoginResponseDto login(LoginUserDto userDto) {

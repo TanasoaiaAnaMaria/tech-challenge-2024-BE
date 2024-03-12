@@ -59,7 +59,7 @@ public class TeamRoleService {
         return teamRole;
     }
 
-    public void updateTeamRole(UUID idTeamRole, TeamRoleDto teamRoleDto){
+    public TeamRole updateTeamRole(UUID idTeamRole, TeamRoleDto teamRoleDto){
         TeamRole existingTeamRole = teamRoleRepository.findById(idTeamRole).orElseThrow(()->
                 new CrudOperationException(ApplicationConstants.ERROR_MESSAGE_TEAMROLE));
 
@@ -70,6 +70,7 @@ public class TeamRoleService {
         existingTeamRole.setTeamRoleName(teamRoleDto.getTeamRoleName());
 
         teamRoleRepository.save(existingTeamRole);
+        return existingTeamRole;
     }
 
     public void deleteTeamRole(UUID idTeamRole){
