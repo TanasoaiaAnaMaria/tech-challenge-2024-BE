@@ -22,6 +22,8 @@ public class Skill {
 
     private String skillName;
 
+    private UUID idOrganisation;
+
     private String skillDescription;
 
     private UUID createdBy;

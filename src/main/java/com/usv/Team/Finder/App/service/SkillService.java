@@ -29,6 +29,7 @@ public class SkillService {
 
         Skill skill = Skill.builder()
                 .skillName(skillDto.getSkilName())
+                .idOrganisation(user.getIdOrganisation())
                 .skillDescription(skillDto.getSkilDescription())
                 .createdBy(skillDto.getCreatedBy())
                 .idSkillCategory(skillDto.getIdSkilCategory())
