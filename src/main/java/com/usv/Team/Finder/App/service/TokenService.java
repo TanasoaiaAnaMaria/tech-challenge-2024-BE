@@ -55,19 +55,4 @@ public class TokenService {
         return jwtEncoder.encode(JwtEncoderParameters.from(claimsSet)).getTokenValue();
     }
 
-    public String generateEmployeeSignUpURL(UUID organisationId) {
-        Instant now = Instant.now();
-
-        Organisation organisation = organisationRepository.findById(organisationId).orElseThrow(() -> new CrudOperationException(MESAJ_DE_EROARE_ORGANISATION));
-
-        JwtClaimsSet claimsSet = JwtClaimsSet.builder()
-                .issuer("self")
-                .issuedAt(now)
-                .claim("idOrganisation", organisation.getIdOrganisation())
-                .claim("organisationName", organisation.getOrganisationName())
-                .build();
-
-        return jwtEncoder.encode(JwtEncoderParameters.from(claimsSet)).getTokenValue();
-    }
-
 }

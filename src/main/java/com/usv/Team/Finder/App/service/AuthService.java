@@ -43,7 +43,7 @@ public class AuthService {
         this.organisationRepository = organisationRepository;
     }
 
-    public User registerOrganisationAdmin(RegisterOrganisationAdminDto userDto) {
+    public User registerOrganisationAdmin(RegisterOrganisationAdminDto userDto) throws Exception {
         Optional<User> existingUser = userRepository.findByeMailAdress(userDto.getEMailAdress());
         if (existingUser.isPresent()) {
             throw new RegistrationException(ApplicationConstants.EMAIL_ALREADY_EXISTS, HttpStatus.UNAUTHORIZED);

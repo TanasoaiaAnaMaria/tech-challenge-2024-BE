@@ -38,7 +38,7 @@ class AuthServiceTest {
     }
 
     @Test
-    void registerOrganisationAdmin_Success() {
+    void registerOrganisationAdmin_Success() throws Exception {
         // Setup
         Set<Role> roles = new HashSet<>(Collections.singletonList(new Role("ORGANISATION_ADMIN")));
         RegisterOrganisationAdminDto dto = new RegisterOrganisationAdminDto("John", "Doe", "john@example.com", "password", roles, "OrgName", "HQ Address");

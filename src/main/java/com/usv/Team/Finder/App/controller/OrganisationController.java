@@ -34,7 +34,7 @@ public class OrganisationController {
     @PreAuthorize("hasRole('ORGANISATION_ADMIN')")
     public ResponseEntity<Organisation> updateOrganisationHeadquarterAddress(
             @RequestParam("idOrganisation") UUID idOrganisation,
-            @RequestParam("newHeadquarterAddress") String newHeadquarterAddress) {
+            @RequestParam("newHeadquarterAddress") String newHeadquarterAddress) throws Exception {
 
         organisationService.updateOrganisationHeadquarterAddress(idOrganisation, newHeadquarterAddress);
         return ResponseEntity.ok().build();

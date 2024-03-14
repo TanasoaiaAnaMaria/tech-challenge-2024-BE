@@ -23,7 +23,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody RegisterOrganisationAdminDto userDto) {
+    public ResponseEntity<User> register(@RequestBody RegisterOrganisationAdminDto userDto) throws Exception {
         authService.registerOrganisationAdmin(userDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
