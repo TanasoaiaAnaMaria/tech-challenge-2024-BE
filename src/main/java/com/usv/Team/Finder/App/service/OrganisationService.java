@@ -7,7 +7,10 @@ import com.usv.Team.Finder.App.repository.ApplicationConstants;
 import com.usv.Team.Finder.App.repository.OrganisationRepository;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.UUID;
+import java.util.zip.Deflater;
 
 @Service
 public class OrganisationService {
@@ -30,14 +33,30 @@ public class OrganisationService {
                 .build();
     }
 
-    private void updateRegistrationUrl(Organisation organisation) {
-        String baseUrl = "http://localhost:3000/register/employee/";
-        String token = tokenService.generateEmployeeSignUpURL(organisation.getIdOrganisation());
-        organisation.setRegistrationUrl(baseUrl + token);
+    private String encryptAndCompress(String data) throws Exception {
+        byte[] input = data.getBytes(StandardCharsets.UTF_8);
+        byte[] output = new byte[100];
+        Deflater deflater = new Deflater();
+        deflater.setInput(input);
+        deflater.finish();
+        int compressedDataLength = deflater.deflate(output);
+        deflater.end();
+
+        byte[] compressedData = new byte[compressedDataLength];
+        System.arraycopy(output, 0, compressedData, 0, compressedDataLength);
+
+        return Base64.getUrlEncoder().encodeToString(compressedData);
+    }
+
+    private void updateRegistrationUrl(Organisation organisation) throws Exception {
+        String baseUrl = "https://atc-2024-thepenguins-fe-linux-web-app.azurewebsites.net/register/employee";
+        String dataToEncrypt = organisation.getIdOrganisation() + ":" + organisation.getOrganisationName();
+        String encryptedData = encryptAndCompress(dataToEncrypt);
+        organisation.setRegistrationUrl(baseUrl +"/"+ encryptedData);
         organisationRepository.save(organisation);
     }
 
-    public UUID addOrganisation(OrganisationDto organisationDto) {
+    public UUID addOrganisation(OrganisationDto organisationDto) throws Exception {
         Organisation organisation = Organisation.builder()
                 .organisationName(organisationDto.getOrganisationName())
                 .headquarterAddress(organisationDto.getHeadquarterAddress())
@@ -49,7 +68,7 @@ public class OrganisationService {
         return organisationSaved.getIdOrganisation();
     }
 
-    public void updateOrganisationHeadquarterAddress(UUID idOrganisation, String newHeadquarterAddress) {
+    public void updateOrganisationHeadquarterAddress(UUID idOrganisation, String newHeadquarterAddress) throws Exception {
         Organisation organisation = organisationRepository.findById(idOrganisation)
                 .orElseThrow(() -> new CrudOperationException(ApplicationConstants.ERROR_MESSAGE_ORGANISATION));
 
