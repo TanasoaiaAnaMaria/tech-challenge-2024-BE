@@ -104,6 +104,7 @@ public class UserService implements UserDetailsService {
                 .departmentName(departmentName)
                 .OrganisationAdminNames(organisationAdminNames)
                 .registrationUrl(registrationUrl)
+                .skilsCreated(user.getSkilsCreated())
                 .build();
     }
 

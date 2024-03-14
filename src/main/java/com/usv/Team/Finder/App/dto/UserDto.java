@@ -1,6 +1,7 @@
 package com.usv.Team.Finder.App.dto;
 
 import com.usv.Team.Finder.App.entity.Role;
+import com.usv.Team.Finder.App.entity.Skill;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -42,4 +43,6 @@ public class UserDto {
     private List<String> OrganisationAdminNames;
 
     private String registrationUrl;
+
+    private Set<Skill> skilsCreated;
 }

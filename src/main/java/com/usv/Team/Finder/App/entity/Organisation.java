@@ -51,10 +51,10 @@ public class Organisation {
     private Set<User> teamRoles;
 
     @OneToMany(
-            targetEntity = SkilCategory.class,
+            targetEntity = SkillCategory.class,
             fetch = FetchType.LAZY,
             cascade = CascadeType.PERSIST
     )
     @JoinColumn(name="idOrganisation", referencedColumnName = "idOrganisation")
-    private Set<User> skilCategorys;
+    private Set<User> skillCategorys;
 }

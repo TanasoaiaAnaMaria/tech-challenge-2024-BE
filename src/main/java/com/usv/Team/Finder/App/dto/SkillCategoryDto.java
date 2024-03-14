@@ -11,7 +11,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SkilCategoryDto {
+public class SkillCategoryDto {
     private String skilCategoryName;
     UUID idOrganisation;
 }
