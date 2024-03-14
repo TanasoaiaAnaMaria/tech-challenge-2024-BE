@@ -65,10 +65,8 @@ public class TokenService {
                 .issuedAt(now)
                 .claim("idOrganisation", organisation.getIdOrganisation())
                 .claim("organisationName", organisation.getOrganisationName())
-                .claim("headquarterAddress", organisation.getHeadquarterAddress())
                 .build();
 
-        System.out.println(claimsSet);
         return jwtEncoder.encode(JwtEncoderParameters.from(claimsSet)).getTokenValue();
     }
 

@@ -31,7 +31,7 @@ public class OrganisationService {
     }
 
     private void updateRegistrationUrl(Organisation organisation) {
-        String baseUrl = "http://localhost:3000/register/employee/";
+        String baseUrl = "https://atc-2024-thepenguins-fe-linux-web-app.azurewebsites.net/register/employee";
         String token = tokenService.generateEmployeeSignUpURL(organisation.getIdOrganisation());
         organisation.setRegistrationUrl(baseUrl + token);
         organisationRepository.save(organisation);
