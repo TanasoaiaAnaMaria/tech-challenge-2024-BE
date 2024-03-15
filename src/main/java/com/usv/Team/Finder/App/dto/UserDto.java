@@ -32,7 +32,7 @@ public class UserDto {
 
     private Set<Role> authorities;
 
-    private boolean isDepartmentManager;
+    private Boolean isDepartmentManager;
 
     private String departmentManagerName;
 

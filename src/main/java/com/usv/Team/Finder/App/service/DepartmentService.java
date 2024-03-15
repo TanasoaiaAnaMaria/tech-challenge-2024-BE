@@ -104,4 +104,20 @@ public class DepartmentService {
 
         departmentRepository.save(department);
     }
+
+    public List<String> findDepartmentNamesBySkillAndOrganisation(UUID idSkill, UUID idOrganisation) {
+        List<Department> allDepartments = getDepartments(idOrganisation); // Presupunem că aceasta returnează toate departamentele pentru o organizație
+        List<String> departmentNames = new ArrayList<>();
+
+        for (Department department : allDepartments) {
+            for (Skill skill : department.getSkills()) {
+                if (skill.getIdSkill().equals(idSkill)) {
+                    departmentNames.add(department.getDepartmentName());
+                    break;
+                }
+            }
+        }
+
+        return departmentNames;
+    }
 }

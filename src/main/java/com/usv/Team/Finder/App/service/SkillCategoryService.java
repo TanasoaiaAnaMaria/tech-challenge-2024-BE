@@ -28,6 +28,9 @@ public class SkillCategoryService {
 
     public List<SkillCategory> getSkillCategoryPerOrganisation(UUID idOrganisation) {
         List<SkillCategory> skilCategories = skillCategoryRepository.findByIdOrganisation(idOrganisation);
+        if(skilCategories.isEmpty())
+            throw new FunctionalException(ApplicationConstants.ERROR_MESSAGE_ORGANISATION, HttpStatus.NOT_FOUND);
+
 
         return skilCategories.stream()
                 .map(skill -> SkillCategory.builder()

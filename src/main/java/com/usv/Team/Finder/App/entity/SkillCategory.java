@@ -12,7 +12,7 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
-@Table(name = "skilCategory")
+@Table(name = "skillCategory")
 public class SkillCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
