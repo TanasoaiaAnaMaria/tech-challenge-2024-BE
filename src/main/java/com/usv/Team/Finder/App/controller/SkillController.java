@@ -38,4 +38,22 @@ public class SkillController {
         skillService.addSkill(skillDto);
         return new ResponseEntity<>(null, HttpStatus.CREATED);
     }
+
+    @PutMapping("/updateSkill")
+    @PreAuthorize("hasRole('DEPARTMENT_MANAGER')")
+    public ResponseEntity<Skill> updateSkill(@RequestParam UUID idSkill, @RequestParam UUID idUser, @RequestBody SkillDto skillDto){
+        Skill skill = skillService.updateSkill(idSkill, idUser, skillDto);
+        return ResponseEntity.ok(skill);
+    }
+
+    @DeleteMapping("/deleteSkill")
+    @PreAuthorize("hasRole('DEPARTMENT_MANAGER')")
+    public ResponseEntity<?> deleteSkill(@RequestParam UUID idSkill, @RequestParam UUID idUser){
+        try{
+            skillService.deleteSkill(idSkill,idUser);
+            return ResponseEntity.ok().build();
+        } catch (CrudOperationException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 }

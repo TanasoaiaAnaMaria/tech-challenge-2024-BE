@@ -5,8 +5,10 @@ import com.usv.Team.Finder.App.entity.Department;
 import com.usv.Team.Finder.App.entity.Skill;
 import com.usv.Team.Finder.App.entity.User;
 import com.usv.Team.Finder.App.exception.CrudOperationException;
+import com.usv.Team.Finder.App.exception.FunctionalException;
 import com.usv.Team.Finder.App.repository.ApplicationConstants;
 import com.usv.Team.Finder.App.repository.SkillRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -66,4 +68,36 @@ public class SkillService {
         departmentService.addSkill(department.getIdDepartment(),skill);
         return skill;
     }
+
+    public Skill updateSkill (UUID idSkill, UUID idUser, SkillDto skillDto){
+        Skill skill = skillRepository.findById(idSkill).orElseThrow(() ->
+                new CrudOperationException(ApplicationConstants.ERROR_MESSAGE_SKILL));
+
+        if (!skill.getCreatedBy().equals(idUser) ) {
+            throw new FunctionalException(ApplicationConstants.ERROR_UPDATE_SKILL, HttpStatus.UNAUTHORIZED);
+        }
+
+        skill.setSkillName(skillDto.getSkillName());
+        skill.setSkillDescription(skillDto.getSkillDescription());
+        skill.setIdSkillCategory(skillDto.getIdSkilCategory());
+
+        skillRepository.save(skill);
+        return skill;
+    }
+
+    public void deleteSkill(UUID idSkill, UUID idUser){
+        Skill skill = skillRepository.findById(idSkill).orElseThrow(() ->
+                new CrudOperationException(ApplicationConstants.ERROR_MESSAGE_SKILL));
+
+        if (!skill.getDepartments().isEmpty()) {
+            throw new FunctionalException(ApplicationConstants.ERROR_SKILL_IN_USE_BY_DEPARTMENTS , HttpStatus.CONFLICT);
+        }
+
+        if (!skill.getCreatedBy().equals(idUser) ) {
+            throw new FunctionalException(ApplicationConstants.ERROR_DELETE_SKILL, HttpStatus.UNAUTHORIZED);
+        }
+
+        skillRepository.deleteById(idSkill);
+    }
+
 }

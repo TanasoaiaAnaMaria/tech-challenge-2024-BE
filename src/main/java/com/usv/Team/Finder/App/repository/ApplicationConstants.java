@@ -17,4 +17,7 @@ public interface ApplicationConstants {
     String ERROR_USER_ALREADY_ASSIGNED_TO_A_DEPARTMENT = "User is already assigned to a department";
     String ERROR_NO_RIGHTS = "You have no rights to add entities to another organisation";
     String ERROR_NULL_PARAMETER = "The received parameter must not be null";
+    String ERROR_UPDATE_SKILL = "Unauthorized to update skill";
+    String ERROR_DELETE_SKILL = "Unauthorized to delete skill";
+    String ERROR_SKILL_IN_USE_BY_DEPARTMENTS = "Skill cannot be deleted because it is used in departments";
 }
