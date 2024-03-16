@@ -45,6 +45,14 @@ public class User implements UserDetails {
 
     private UUID idDepartment;
 
+    @OneToMany(
+            targetEntity = Skill.class,
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.PERSIST
+    )
+    @JoinColumn(name="createdBy", referencedColumnName = "idUser")
+    private Set<Skill> skilsCreated;
+
     public User(String eMailAdress, String password, Set<Role> authorities) {
         this.eMailAdress = eMailAdress;
         this.password = password;

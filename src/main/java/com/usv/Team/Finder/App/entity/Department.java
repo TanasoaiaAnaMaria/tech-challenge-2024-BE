@@ -32,4 +32,12 @@ public class Department {
     @JoinColumn(name="idDepartment", referencedColumnName = "idDepartment")
     private Set<User> users;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "department_skills",
+            joinColumns = {@JoinColumn(name = "department_id")},
+            inverseJoinColumns = {@JoinColumn(name = "skill_id")}
+    )
+    private Set<Skill> skills;
+
 }
