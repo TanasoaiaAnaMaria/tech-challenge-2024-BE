@@ -1,6 +1,7 @@
 package com.usv.Team.Finder.App.service;
 
 import com.usv.Team.Finder.App.dto.SkillDto;
+import com.usv.Team.Finder.App.dto.UserDto;
 import com.usv.Team.Finder.App.entity.Department;
 import com.usv.Team.Finder.App.entity.Skill;
 import com.usv.Team.Finder.App.entity.User;
@@ -10,6 +11,8 @@ import com.usv.Team.Finder.App.repository.ApplicationConstants;
 import com.usv.Team.Finder.App.repository.SkillRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.apache.commons.lang3.tuple.Pair;
+
 
 import java.util.HashSet;
 import java.util.List;
@@ -65,7 +68,7 @@ public class SkillService {
 
 
     public Skill addSkill(SkillDto skillDto){
-        User user =  userService.existUser(skillDto.getCreatedBy());
+        User user = userService.existUser(skillDto.getCreatedBy());
         Department department = departmentService.getDepartmentById(user.getIdDepartment());
 
         Skill skill = Skill.builder()
@@ -77,18 +80,62 @@ public class SkillService {
                 .build();
 
         if (Boolean.TRUE.equals(skillDto.getAdToMyDepartment()) && user.getIsDepartmentManager()) {
-
             if (skill.getDepartments() == null) {
                 skill.setDepartments(new HashSet<>());
             }
-
             skill.getDepartments().add(department);
+            skillRepository.save(skill);
+            departmentService.addSkill(department.getIdDepartment(), skill);
+        } else {
+            skillRepository.save(skill);
         }
 
-        skillRepository.save(skill);
-        departmentService.addSkill(department.getIdDepartment(),skill);
         return skill;
     }
+
+    private Pair<UserDto, Skill> verifySkillAndUser(UUID idSkill, UUID currentUserId) {
+        UserDto currentUser = userService.getUserById(currentUserId);
+        if (!currentUser.getIsDepartmentManager()) {
+            throw new FunctionalException(ApplicationConstants.ERROR_NOT_DEPARTMENT_MANAGER, HttpStatus.FORBIDDEN);
+        }
+
+        Skill skill = skillRepository.findById(idSkill).orElseThrow(() ->
+                new CrudOperationException(ApplicationConstants.ERROR_MESSAGE_SKILL));
+
+        return Pair.of(currentUser, skill);
+    }
+
+    public Skill addSkillToMyDepartment(UUID idSkill, UUID currentUserId) {
+        Pair<UserDto, Skill> verificationResult = verifySkillAndUser(idSkill, currentUserId);
+        Skill skill = verificationResult.getRight();
+        Department currentDepartment = departmentService.getDepartmentById(verificationResult.getLeft().getIdDepartment());
+
+        if (skill.getDepartments().contains(currentDepartment)) {
+            throw new FunctionalException(ApplicationConstants.ERROR_SKILL_ALREADY_IN_DEPARTMENT, HttpStatus.CONFLICT);
+        }
+
+        skill.getDepartments().add(currentDepartment);
+        skillRepository.save(skill);
+
+        departmentService.addSkillToDepartment(currentDepartment, skill);
+        return skill;
+    }
+
+    public void removeSkillFromMyDepartment(UUID idSkill, UUID currentUserId) {
+        Pair<UserDto, Skill> verificationResult = verifySkillAndUser(idSkill, currentUserId);
+        Skill skill = verificationResult.getRight();
+        Department currentDepartment = departmentService.getDepartmentById(verificationResult.getLeft().getIdDepartment());
+
+        if (!skill.getDepartments().contains(currentDepartment)) {
+            throw new FunctionalException(ApplicationConstants.ERROR_SKILL_NOT_IN_DEPARTMENT, HttpStatus.NOT_FOUND);
+        }
+
+        skill.getDepartments().remove(currentDepartment);
+        departmentService.removeSkillFromDepartment(currentDepartment, skill);
+
+        skillRepository.save(skill);
+    }
+
 
     public Skill updateSkill (UUID idSkill, UUID idUser, SkillDto skillDto){
         Skill skill = skillRepository.findById(idSkill).orElseThrow(() ->

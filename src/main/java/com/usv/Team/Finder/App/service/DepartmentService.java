@@ -120,4 +120,21 @@ public class DepartmentService {
 
         return departmentNames;
     }
+
+    public void addSkillToDepartment(Department department, Skill skill) {
+        if (department.getSkills() == null) {
+            department.setSkills(new HashSet<>());
+        }
+        department.getSkills().add(skill);
+        departmentRepository.save(department);
+    }
+
+    public void removeSkillFromDepartment(Department department, Skill skill) {
+        if (department.getSkills() != null && department.getSkills().contains(skill)) {
+            department.getSkills().remove(skill);
+            departmentRepository.save(department);
+        }
+    }
+
+
 }
