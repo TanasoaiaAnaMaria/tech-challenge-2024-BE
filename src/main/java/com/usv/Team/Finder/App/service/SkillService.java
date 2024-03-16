@@ -54,7 +54,6 @@ public class SkillService {
 
     public List<SkillDto> getAllSkillsByOrganisation(UUID idOrganisation, UUID currentUserId) {
         List<Skill> skills = skillRepository.findByidOrganisation(idOrganisation);
-        // Trebuie să trecem currentUserId la buildSkillDto pentru fiecare Skill în parte
         return skills.stream().map(skill -> buildSkillDto(skill, currentUserId)).collect(Collectors.toList());
     }
 
@@ -64,6 +63,17 @@ public class SkillService {
                 new CrudOperationException(ApplicationConstants.ERROR_MESSAGE_SKILL));
 
         return buildSkillDto(skill, currentUserId);
+    }
+
+    public List<SkillDto> getSkillsByDepartment(UUID currentUserId) {
+        UserDto currentUser = userService.getUserById(currentUserId);
+
+        Department department = departmentService.getDepartmentById(currentUser.getIdDepartment());
+        List<Skill> skills = skillRepository.findByidOrganisation(department.getIdOrganisation()).stream()
+                .filter(skill -> skill.getDepartments().contains(department))
+                .toList();
+
+        return skills.stream().map(skill -> buildSkillDto(skill, currentUserId)).collect(Collectors.toList());
     }
 
 

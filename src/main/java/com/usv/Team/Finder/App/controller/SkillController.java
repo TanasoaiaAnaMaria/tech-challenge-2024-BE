@@ -40,6 +40,17 @@ public class SkillController {
         }
     }
 
+    @GetMapping("/getByDepartment")
+    @PreAuthorize("hasRole('DEPARTMENT_MANAGER')")
+    public ResponseEntity<?> getSkillsByDepartment(@RequestParam UUID idUser) {
+        try {
+            List<SkillDto> skills = skillService.getSkillsByDepartment(idUser);
+            return ResponseEntity.ok(skills);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
     @PostMapping("/addSkill")
     @PreAuthorize("hasRole('DEPARTMENT_MANAGER')")
     public ResponseEntity<Skill> addSkil(@RequestBody SkillDto skillDto){
