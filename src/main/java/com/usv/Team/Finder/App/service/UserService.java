@@ -65,6 +65,7 @@ public class UserService implements UserDetailsService {
                     .idDepartment(user.getIdDepartment())
                     .departmentName(departmentName)
                     .OrganisationAdminNames(organisationAdminNames)
+                    .skilsCreated(user.getSkilsCreated())
                     .build());
         });
 

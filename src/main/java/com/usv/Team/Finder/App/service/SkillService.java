@@ -81,7 +81,10 @@ public class SkillService {
         return skills.stream().map(skill -> buildSkillDto(skill, currentUserId)).collect(Collectors.toList());
     }
 
-
+    public List<SkillDto> getSkillsCreatedByMe(UUID currentUserId) {
+        List<Skill> skills = skillRepository.findByCreatedBy(currentUserId);
+        return skills.stream().map(skill -> buildSkillDto(skill, currentUserId)).collect(Collectors.toList());
+    }
 
     public Skill addSkill(SkillDto skillDto){
         User user = userService.existUser(skillDto.getCreatedBy());
