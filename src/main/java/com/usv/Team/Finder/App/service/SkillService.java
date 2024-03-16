@@ -12,7 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class SkillService {
@@ -30,17 +32,27 @@ public class SkillService {
         this.skillCategoryService = skillCategoryService;
     }
 
-    public SkillDto getSkillById(UUID idSkill){
-        Skill skill = skillRepository.findById(idSkill).orElseThrow(() ->
-                new CrudOperationException(ApplicationConstants.ERROR_MESSAGE_SKILL));
-
+    private SkillDto buildSkillDto(Skill skill) {
         return SkillDto.builder()
+                .idSkill(skill.getIdSkill())
                 .skillName(skill.getSkillName())
                 .skillDescription(skill.getSkillDescription())
                 .creatorName(userService.getSkilCreatorName(skill.getCreatedBy()))
                 .skillCategoryName(skillCategoryService.getSkillCategoryById(skill.getIdSkillCategory()).getSkilCategoryName())
-                .departments(departmentService.findDepartmentNamesBySkillAndOrganisation(idSkill, skill.getIdOrganisation()))
+                .departments(departmentService.findDepartmentNamesBySkillAndOrganisation(skill.getIdSkill(), skill.getIdOrganisation()))
                 .build();
+    }
+
+    public List<SkillDto> getAllSkillsByOrganisation(UUID idOrganisation) {
+        List<Skill> skills = skillRepository.findByidOrganisation(idOrganisation);
+        return skills.stream().map(this::buildSkillDto).collect(Collectors.toList());
+    }
+
+    public SkillDto getSkillById(UUID idSkill){
+        Skill skill = skillRepository.findById(idSkill).orElseThrow(() ->
+                new CrudOperationException(ApplicationConstants.ERROR_MESSAGE_SKILL));
+
+        return buildSkillDto(skill);
     }
 
     public Skill addSkill(SkillDto skillDto){
@@ -52,7 +64,7 @@ public class SkillService {
                 .idOrganisation(user.getIdOrganisation())
                 .skillDescription(skillDto.getSkillDescription())
                 .createdBy(skillDto.getCreatedBy())
-                .idSkillCategory(skillDto.getIdSkilCategory())
+                .idSkillCategory(skillDto.getIdSkillCategory())
                 .build();
 
         if (Boolean.TRUE.equals(skillDto.getAdToMyDepartment()) && user.getIsDepartmentManager()) {
@@ -79,7 +91,7 @@ public class SkillService {
 
         skill.setSkillName(skillDto.getSkillName());
         skill.setSkillDescription(skillDto.getSkillDescription());
-        skill.setIdSkillCategory(skillDto.getIdSkilCategory());
+        skill.setIdSkillCategory(skillDto.getIdSkillCategory());
 
         skillRepository.save(skill);
         return skill;

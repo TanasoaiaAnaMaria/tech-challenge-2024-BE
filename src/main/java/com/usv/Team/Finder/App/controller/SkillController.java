@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -21,6 +22,12 @@ public class SkillController {
         this.skillService = skillService;
     }
 
+    @GetMapping("/getAll")
+    @PreAuthorize("hasRole('DEPARTMENT_MANAGER')")
+    public ResponseEntity<List<SkillDto>> getAllSkillsByOrganisation(@RequestParam UUID idOrganisation){
+        List<SkillDto> skils = skillService.getAllSkillsByOrganisation(idOrganisation);
+        return ResponseEntity.ok(skils);
+    }
     @GetMapping("/getById")
     @PreAuthorize("hasRole('DEPARTMENT_MANAGER')")
     public ResponseEntity<SkillDto> getSkillById(@RequestParam UUID idSkill){

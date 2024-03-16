@@ -11,6 +11,8 @@ import java.util.UUID;
 @Getter
 @Setter
 public class SkillDto {
+    private UUID idSkill;
+
     private String skillName;
 
     private String skillDescription;
@@ -19,7 +21,7 @@ public class SkillDto {
 
     private String creatorName;
 
-    private UUID idSkilCategory;
+    private UUID idSkillCategory;
 
     private String skillCategoryName;
 
