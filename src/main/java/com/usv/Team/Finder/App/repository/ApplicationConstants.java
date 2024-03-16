@@ -10,9 +10,17 @@ public interface ApplicationConstants {
     String ERROR_MESSAGE_USER = "User does not exist";
     String ERROR_MESSAGE_ROLE = "Role does not exist";
     String ERROR_MESSAGE_TEAMROLE = "Team role does not exist";
+    String ERROR_MESSAGE_SKILL_CATEGORY = "Skill category does not exist";
+    String ERROR_MESSAGE_SKILL = "Skill does not exist";
     String ERROR_USERS_FROM_ORGANISATION = "No users in organisation";
     String ERROR_ROLE_NOT_FOUND_FOR_USER = "Specified role not found for user.";
     String ERROR_USER_ALREADY_ASSIGNED_TO_A_DEPARTMENT = "User is already assigned to a department";
     String ERROR_NO_RIGHTS = "You have no rights to add entities to another organisation";
     String ERROR_NULL_PARAMETER = "The received parameter must not be null";
+    String ERROR_UPDATE_SKILL = "Unauthorized to update skill";
+    String ERROR_DELETE_SKILL = "Unauthorized to delete skill";
+    String ERROR_SKILL_IN_USE_BY_DEPARTMENTS = "Skill cannot be deleted because it is used in departments";
+    String ERROR_NOT_DEPARTMENT_MANAGER = "You are not authorized to perform this action as you are not a department manager.";
+    String ERROR_SKILL_ALREADY_IN_DEPARTMENT = "This skill is already added to your department.";
+    String ERROR_SKILL_NOT_IN_DEPARTMENT = "This skill is not part of your department.";
 }

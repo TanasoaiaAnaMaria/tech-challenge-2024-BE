@@ -49,4 +49,12 @@ public class Organisation {
     )
     @JoinColumn(name="idOrganisation", referencedColumnName = "idOrganisation")
     private Set<User> teamRoles;
+
+    @OneToMany(
+            targetEntity = SkillCategory.class,
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.PERSIST
+    )
+    @JoinColumn(name="idOrganisation", referencedColumnName = "idOrganisation")
+    private Set<User> skillCategorys;
 }

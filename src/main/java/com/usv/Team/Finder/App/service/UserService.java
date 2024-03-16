@@ -65,6 +65,7 @@ public class UserService implements UserDetailsService {
                     .idDepartment(user.getIdDepartment())
                     .departmentName(departmentName)
                     .OrganisationAdminNames(organisationAdminNames)
+                    .skilsCreated(user.getSkilsCreated())
                     .build());
         });
 
@@ -104,6 +105,7 @@ public class UserService implements UserDetailsService {
                 .departmentName(departmentName)
                 .OrganisationAdminNames(organisationAdminNames)
                 .registrationUrl(registrationUrl)
+                .skilsCreated(user.getSkilsCreated())
                 .build();
     }
 
@@ -249,6 +251,12 @@ public class UserService implements UserDetailsService {
 
         return organisationAdminNames;
     }
+
+    public String getSkilCreatorName(UUID idSkilCreator) {
+        User user = existUser(idSkilCreator);
+        return user.getFirstName() + " " + user.getLastName();
+    }
+
 
     private String getDepartmentName(UUID departmentId) {
         if (departmentId != null) {
