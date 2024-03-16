@@ -24,15 +24,15 @@ public class SkillController {
 
     @GetMapping("/getAll")
     @PreAuthorize("hasRole('DEPARTMENT_MANAGER')")
-    public ResponseEntity<List<SkillDto>> getAllSkillsByOrganisation(@RequestParam UUID idOrganisation){
-        List<SkillDto> skils = skillService.getAllSkillsByOrganisation(idOrganisation);
-        return ResponseEntity.ok(skils);
+    public ResponseEntity<List<SkillDto>> getAllSkillsByOrganisation(@RequestParam UUID idOrganisation, @RequestParam UUID idUser){
+        List<SkillDto> skills = skillService.getAllSkillsByOrganisation(idOrganisation, idUser);
+        return ResponseEntity.ok(skills);
     }
     @GetMapping("/getById")
     @PreAuthorize("hasRole('DEPARTMENT_MANAGER')")
-    public ResponseEntity<SkillDto> getSkillById(@RequestParam UUID idSkill){
+    public ResponseEntity<SkillDto> getSkillById(@RequestParam UUID idSkill, @RequestParam UUID idUser){
         try {
-            SkillDto skill = skillService.getSkillById(idSkill);
+            SkillDto skill = skillService.getSkillById(idSkill, idUser);
             return ResponseEntity.ok(skill);
         } catch (CrudOperationException e) {
             return ResponseEntity.notFound().build();

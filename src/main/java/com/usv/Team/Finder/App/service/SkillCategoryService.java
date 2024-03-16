@@ -34,8 +34,8 @@ public class SkillCategoryService {
 
         return skilCategories.stream()
                 .map(skill -> SkillCategory.builder()
-                        .idSkilCategory(skill.getIdSkilCategory())
-                        .skilCategoryName(skill.getSkilCategoryName())
+                        .idSkillCategory(skill.getIdSkillCategory())
+                        .skillCategoryName(skill.getSkillCategoryName())
                         .idOrganisation(skill.getIdOrganisation())
                         .build())
                 .collect(Collectors.toList());
@@ -54,7 +54,7 @@ public class SkillCategoryService {
             throw new FunctionalException(ApplicationConstants.ERROR_NO_RIGHTS, HttpStatus.CONFLICT);
 
         SkillCategory skillCategory = SkillCategory.builder()
-                .skilCategoryName(skillCategoryDto.getSkilCategoryName())
+                .skillCategoryName(skillCategoryDto.getSkilCategoryName())
                 .idOrganisation(skillCategoryDto.getIdOrganisation())
                 .build();
 
@@ -70,7 +70,7 @@ public class SkillCategoryService {
             throw new FunctionalException(ApplicationConstants.ERROR_NO_RIGHTS, HttpStatus.CONFLICT);
 
 
-        existingSkillCategory.setSkilCategoryName(skillCategoryDto.getSkilCategoryName());
+        existingSkillCategory.setSkillCategoryName(skillCategoryDto.getSkilCategoryName());
 
         skillCategoryRepository.save(existingSkillCategory);
         return existingSkillCategory;

@@ -32,28 +32,37 @@ public class SkillService {
         this.skillCategoryService = skillCategoryService;
     }
 
-    private SkillDto buildSkillDto(Skill skill) {
+    private SkillDto buildSkillDto(Skill skill, UUID currentUserId) {
+        User currentUser = userService.existUser(currentUserId);
+        boolean isInMyDepartment = skill.getDepartments().stream()
+                .anyMatch(department -> department.getIdDepartment().equals(currentUser.getIdDepartment()));
+
         return SkillDto.builder()
                 .idSkill(skill.getIdSkill())
                 .skillName(skill.getSkillName())
                 .skillDescription(skill.getSkillDescription())
                 .creatorName(userService.getSkilCreatorName(skill.getCreatedBy()))
-                .skillCategoryName(skillCategoryService.getSkillCategoryById(skill.getIdSkillCategory()).getSkilCategoryName())
+                .skillCategoryName(skillCategoryService.getSkillCategoryById(skill.getIdSkillCategory()).getSkillCategoryName())
                 .departments(departmentService.findDepartmentNamesBySkillAndOrganisation(skill.getIdSkill(), skill.getIdOrganisation()))
+                .isInMyDepartment(isInMyDepartment)
                 .build();
     }
 
-    public List<SkillDto> getAllSkillsByOrganisation(UUID idOrganisation) {
+
+    public List<SkillDto> getAllSkillsByOrganisation(UUID idOrganisation, UUID currentUserId) {
         List<Skill> skills = skillRepository.findByidOrganisation(idOrganisation);
-        return skills.stream().map(this::buildSkillDto).collect(Collectors.toList());
+        // Trebuie să trecem currentUserId la buildSkillDto pentru fiecare Skill în parte
+        return skills.stream().map(skill -> buildSkillDto(skill, currentUserId)).collect(Collectors.toList());
     }
 
-    public SkillDto getSkillById(UUID idSkill){
+
+    public SkillDto getSkillById(UUID idSkill, UUID currentUserId) {
         Skill skill = skillRepository.findById(idSkill).orElseThrow(() ->
                 new CrudOperationException(ApplicationConstants.ERROR_MESSAGE_SKILL));
 
-        return buildSkillDto(skill);
+        return buildSkillDto(skill, currentUserId);
     }
+
 
     public Skill addSkill(SkillDto skillDto){
         User user =  userService.existUser(skillDto.getCreatedBy());

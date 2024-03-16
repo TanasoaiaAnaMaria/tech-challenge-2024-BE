@@ -16,9 +16,9 @@ import java.util.UUID;
 public class SkillCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID idSkilCategory;
+    private UUID idSkillCategory;
 
-    private String skilCategoryName;
+    private String skillCategoryName;
 
     UUID idOrganisation;
 
@@ -27,6 +27,6 @@ public class SkillCategory {
             fetch = FetchType.LAZY,
             cascade = CascadeType.PERSIST
     )
-    @JoinColumn(name="idSkilCategory", referencedColumnName = "idSkilCategory")
-    private Set<User> skilCategorys;
+    @JoinColumn(name="idSkillCategory", referencedColumnName = "idSkillCategory")
+    private Set<Skill> skills;
 }

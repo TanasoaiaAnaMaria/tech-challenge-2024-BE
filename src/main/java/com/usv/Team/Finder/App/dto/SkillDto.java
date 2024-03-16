@@ -30,5 +30,7 @@ public class SkillDto {
     // if this fild is true the skill will be automaticaly added to the creator department
     private Boolean adToMyDepartment;
 
+    private boolean isInMyDepartment;
+
     private Boolean editable;
 }
