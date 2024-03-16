@@ -37,6 +37,7 @@ public class SkillCategoryService {
                         .idSkillCategory(skill.getIdSkillCategory())
                         .skillCategoryName(skill.getSkillCategoryName())
                         .idOrganisation(skill.getIdOrganisation())
+                        .skills(skill.getSkills())
                         .build())
                 .collect(Collectors.toList());
     }
@@ -50,7 +51,7 @@ public class SkillCategoryService {
         organisationService.getOrganisationById(skillCategoryDto.getIdOrganisation());
 
         User user = userService.existUser(idOrganisationAdmin);
-        if(!user.getIdOrganisation().equals(skillCategoryDto.getIdOrganisation()))
+        if(!user.getIdOrganisation().equals(skillCategoryDto.getIdOrganisation()) && user.getIsDepartmentManager())
             throw new FunctionalException(ApplicationConstants.ERROR_NO_RIGHTS, HttpStatus.CONFLICT);
 
         SkillCategory skillCategory = SkillCategory.builder()

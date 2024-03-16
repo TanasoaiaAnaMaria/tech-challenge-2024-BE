@@ -10,5 +10,8 @@ import java.util.UUID;
 @Repository
 public interface SkillRepository extends CrudRepository<Skill, UUID> {
     List<Skill> findByidOrganisation(UUID idOrganisation);
+    List<Skill> findByidSkillCategory(UUID idSkillCategory);
+    List<Skill> findByCreatedBy(UUID createdBy);
+
 
 }
