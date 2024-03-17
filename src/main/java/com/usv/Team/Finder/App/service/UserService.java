@@ -106,6 +106,7 @@ public class UserService implements UserDetailsService {
                 .OrganisationAdminNames(organisationAdminNames)
                 .registrationUrl(registrationUrl)
                 .skilsCreated(user.getSkilsCreated())
+                .userSkill(user.getUserSkill())
                 .build();
     }
 
@@ -163,8 +164,8 @@ public class UserService implements UserDetailsService {
         getUserById(user.getIdUser());
     }
 
-    public List<UserDto> getUnassignedDepartmentManagers() {
-         List<User> allUsers = (List<User>) userRepository.findAll();
+    public List<UserDto> getUnassignedDepartmentManagers(UUID idOrganisation) {
+         List<User> allUsers = userRepository.findByIdOrganisation(idOrganisation);
 
         return allUsers.stream()
                 .filter(user -> user.getAuthorities().stream().anyMatch(role -> role.getAuthority().equals("DEPARTMENT_MANAGER")) && user.getIdDepartment() == null)
@@ -172,8 +173,8 @@ public class UserService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
-    public List<UserDto> getUsersWithoutDepartment() {
-        List<User> allUsers = (List<User>) userRepository.findAll();
+    public List<UserDto> getUsersWithoutDepartment(UUID idOrganisation) {
+        List<User> allUsers = userRepository.findByIdOrganisation(idOrganisation);
         return allUsers.stream()
                 .filter(user -> user.getIdDepartment() == null)
                 .map(user -> getUserById(user.getIdUser()))
@@ -215,9 +216,13 @@ public class UserService implements UserDetailsService {
 
     public void removeDepartmentManagerFromDepartment(UUID userId) {
         User employee = existUser(userId);
+        Department department = departmentService.getDepartmentById(employee.getIdDepartment());
+
         employee.setIdDepartment(null);
         employee.setIsDepartmentManager(false);
         userRepository.save(employee);
+
+        departmentService.deleteDepartmentManager(department);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////
@@ -276,6 +281,4 @@ public class UserService implements UserDetailsService {
         }
         return null;
     }
-
-
 }
