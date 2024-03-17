@@ -163,8 +163,8 @@ public class UserService implements UserDetailsService {
         getUserById(user.getIdUser());
     }
 
-    public List<UserDto> getUnassignedDepartmentManagers() {
-         List<User> allUsers = (List<User>) userRepository.findAll();
+    public List<UserDto> getUnassignedDepartmentManagers(UUID idOrganisation) {
+         List<User> allUsers = (List<User>) userRepository.findByIdOrganisation(idOrganisation);
 
         return allUsers.stream()
                 .filter(user -> user.getAuthorities().stream().anyMatch(role -> role.getAuthority().equals("DEPARTMENT_MANAGER")) && user.getIdDepartment() == null)
@@ -172,8 +172,8 @@ public class UserService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
-    public List<UserDto> getUsersWithoutDepartment() {
-        List<User> allUsers = (List<User>) userRepository.findAll();
+    public List<UserDto> getUsersWithoutDepartment(UUID idOrganisation) {
+        List<User> allUsers = userRepository.findByIdOrganisation(idOrganisation);
         return allUsers.stream()
                 .filter(user -> user.getIdDepartment() == null)
                 .map(user -> getUserById(user.getIdUser()))

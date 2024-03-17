@@ -28,15 +28,27 @@ public class DepartmentService {
         this.userRepository = userRepository;
     }
 
-    public List<Department> getDepartments(UUID idOrganisation){
-        Iterable<Department> iterableDepartments = departmentRepository.findByIdOrganisation(idOrganisation);
-        List<Department> departments = new ArrayList<>();
+    private String getDepartmentManagerName(UUID idDepartmentManager) {
 
-        iterableDepartments.forEach(department -> departments.add(Department.builder()
+            if (idDepartmentManager != null) {
+                User manager = userRepository.findById(idDepartmentManager).orElseThrow(() ->
+                        new CrudOperationException(ApplicationConstants.ERROR_MESSAGE_USER));
+                return manager.getFirstName() + " " + manager.getLastName();
+            }
+
+        return null;
+    }
+
+    public List<DepartmentDto> getDepartments(UUID idOrganisation){
+        Iterable<Department> iterableDepartments = departmentRepository.findByIdOrganisation(idOrganisation);
+        List<DepartmentDto> departments = new ArrayList<>();
+
+        iterableDepartments.forEach(department -> departments.add(DepartmentDto.builder()
                 .idDepartment(department.getIdDepartment())
                 .idOrganisation(department.getIdOrganisation())
                 .departmentName(department.getDepartmentName())
                 .departmentManager(department.getDepartmentManager())
+                .departmentManagerName(getDepartmentManagerName(department.getDepartmentManager()))
                 .users(department.getUsers())
                 .skills(department.getSkills())
                 .build()));
@@ -106,10 +118,10 @@ public class DepartmentService {
     }
 
     public List<String> findDepartmentNamesBySkillAndOrganisation(UUID idSkill, UUID idOrganisation) {
-        List<Department> allDepartments = getDepartments(idOrganisation); // Presupunem că aceasta returnează toate departamentele pentru o organizație
+        List<DepartmentDto> allDepartments = getDepartments(idOrganisation); // Presupunem că aceasta returnează toate departamentele pentru o organizație
         List<String> departmentNames = new ArrayList<>();
 
-        for (Department department : allDepartments) {
+        for (DepartmentDto department : allDepartments) {
             for (Skill skill : department.getSkills()) {
                 if (skill.getIdSkill().equals(idSkill)) {
                     departmentNames.add(department.getDepartmentName());

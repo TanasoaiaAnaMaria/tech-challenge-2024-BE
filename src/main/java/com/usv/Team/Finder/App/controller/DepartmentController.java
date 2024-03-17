@@ -24,8 +24,8 @@ public class DepartmentController {
 
     @GetMapping("/getAll")
     @PreAuthorize("hasRole('ORGANISATION_ADMIN')")
-    public ResponseEntity<List<Department>> getAllDepartments(@RequestParam UUID idOrganisation){
-        List<Department> departments = departmentService.getDepartments(idOrganisation);
+    public ResponseEntity<List<DepartmentDto>> getAllDepartments(@RequestParam UUID idOrganisation){
+        List<DepartmentDto> departments = departmentService.getDepartments(idOrganisation);
         return ResponseEntity.ok(departments);
     }
 

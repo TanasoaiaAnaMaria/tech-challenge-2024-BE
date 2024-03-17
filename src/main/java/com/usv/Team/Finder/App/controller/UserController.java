@@ -73,8 +73,8 @@ public class UserController {
 
     @GetMapping("/getUnassignedDepartmentManagers")
     @PreAuthorize("hasRole('ORGANISATION_ADMIN')")
-    public ResponseEntity<List<UserDto>> getUnassignedDepartmentManagers() {
-        List<UserDto> unassignedManagers = userService.getUnassignedDepartmentManagers();
+    public ResponseEntity<List<UserDto>> getUnassignedDepartmentManagers(@RequestParam UUID idOrganisation) {
+        List<UserDto> unassignedManagers = userService.getUnassignedDepartmentManagers(idOrganisation);
         if (unassignedManagers.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -84,8 +84,8 @@ public class UserController {
     @GetMapping("/getUsersWithoutDepartment")
     @PreAuthorize("hasAnyRole('ORGANISATION_ADMIN','DEPARTMENT_MANAGER')")
 
-    public ResponseEntity<List<UserDto>> getUsersWithoutDepartment() {
-        List<UserDto> unassignedManagers = userService.getUsersWithoutDepartment();
+    public ResponseEntity<List<UserDto>> getUsersWithoutDepartment(@RequestParam UUID idOrganisation) {
+        List<UserDto> unassignedManagers = userService.getUsersWithoutDepartment(idOrganisation);
         if (unassignedManagers.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
