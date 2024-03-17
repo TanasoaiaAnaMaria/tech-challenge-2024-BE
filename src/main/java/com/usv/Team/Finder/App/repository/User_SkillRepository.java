@@ -10,4 +10,5 @@ import java.util.UUID;
 @Repository
 public interface User_SkillRepository extends CrudRepository<User_Skill, UUID> {
     List<User_Skill> findByIdUser(UUID idUser);
+    List<User_Skill> findByIdUserAndApproved(UUID idUser, boolean approved);
 }

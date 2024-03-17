@@ -14,7 +14,7 @@ import java.util.UUID;
 public class User_SkillDto {
     private UUID idUserSkill;
 
-    private String idUser;
+    private UUID idUser;
     private UUID idSkill;
     private String level;
     private String experience;

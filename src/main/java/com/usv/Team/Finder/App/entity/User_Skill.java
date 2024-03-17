@@ -20,8 +20,12 @@ public class User_Skill {
     @Column(name = "idUser")
     private UUID idUser;
 
+    private String numeUser;
+
     @Column(name = "idSkill")
     private UUID idSkill;
+
+    private String numeSkill;
 
     private String level;
 
