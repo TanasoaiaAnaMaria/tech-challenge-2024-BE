@@ -1,5 +1,6 @@
 package com.usv.Team.Finder.App.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -53,42 +54,65 @@ public class User implements UserDetails {
     @JoinColumn(name="createdBy", referencedColumnName = "idUser")
     private Set<Skill> skilsCreated;
 
+    @OneToMany(
+            targetEntity = Notifications.class,
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.PERSIST
+    )
+    @JoinColumn(name="addressedTo", referencedColumnName = "idUser")
+    private Set<Skill> notifications;
+
+    @OneToMany(
+            targetEntity = User_Skill.class,
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.PERSIST
+    )
+    @JoinColumn(name="idUser", referencedColumnName = "idUser")
+    private Set<User_Skill> userSkill;
+
     public User(String eMailAdress, String password, Set<Role> authorities) {
         this.eMailAdress = eMailAdress;
         this.password = password;
         this.authorities = authorities;
     }
 
+    @JsonIgnore
     @Override
     public Set<Role> getAuthorities() {
         return authorities;
     }
 
+    @JsonIgnore
     @Override
     public String getPassword() {
         return this.password;
     }
 
+    @JsonIgnore
     @Override
     public String getUsername() {
         return this.eMailAdress;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return true;
