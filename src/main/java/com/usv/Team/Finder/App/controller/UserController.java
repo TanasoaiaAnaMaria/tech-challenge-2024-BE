@@ -123,7 +123,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/removeDepartmentManagerFromDepartment")
+    @DeleteMapping("/removeDepartmentManagerFromDepartment")
     @PreAuthorize("hasRole('ORGANISATION_ADMIN')")
     public ResponseEntity<UserDto> removeDepartmentManagerFromDepartment(@RequestParam UUID idUser) {
         try {
