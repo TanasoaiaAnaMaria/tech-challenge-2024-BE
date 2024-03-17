@@ -7,11 +7,11 @@ public interface ApplicationConstants {
     String REGISTRATION_EMPLOYEE_ALREADY_EXIST="Already registered";
     String ERROR_MESSAGE_ORGANISATION = "Organisation does not exist";
     String ERROR_MESSAGE_DEPARTMENT = "Department does not exist";
+    String ERROR_ALREADY_DM = "You are already assigned as department manager to another department";
     String ERROR_MESSAGE_USER = "User does not exist";
     String ERROR_MESSAGE_ROLE = "Role does not exist";
     String ERROR_MESSAGE_TEAMROLE = "Team role does not exist";
     String ERROR_MESSAGE_SKILL_CATEGORY = "Skill category does not exist";
-
     String ERROR_MESSAGE_USER_SKILL = "User skill does not exist";
     String ERROR_MESSAGE_NO_NOTIFICATIONS = "No notification";
     String ERROR_MESSAGE_NOTIFICATION_NOT_FOUND = "Notification not exist";

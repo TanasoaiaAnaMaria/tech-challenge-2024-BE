@@ -209,6 +209,9 @@ public class UserService implements UserDetailsService {
         }
 
         User newManager = existUser(idUser);
+        if(newManager.getIsDepartmentManager())
+            throw new FunctionalException(ApplicationConstants.ERROR_ALREADY_DM, HttpStatus.BAD_REQUEST);
+
         asignDepartmentManager(newManager, department);
 
         departmentService.updateDepartmentManager(department, newManager.getIdUser());
