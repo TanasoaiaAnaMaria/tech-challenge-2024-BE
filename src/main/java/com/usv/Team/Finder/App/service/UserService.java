@@ -159,6 +159,8 @@ public class UserService implements UserDetailsService {
             throw new CrudOperationException(ApplicationConstants.ERROR_ROLE_NOT_FOUND_FOR_USER);
         }
 
+        removeDepartmentManagerFromDepartment(user.getIdUser());
+
         userRepository.save(user);
 
         getUserById(user.getIdUser());
