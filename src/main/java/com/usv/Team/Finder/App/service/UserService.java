@@ -106,6 +106,7 @@ public class UserService implements UserDetailsService {
                 .OrganisationAdminNames(organisationAdminNames)
                 .registrationUrl(registrationUrl)
                 .skilsCreated(user.getSkilsCreated())
+                .userSkill(user.getUserSkill())
                 .build();
     }
 
@@ -164,7 +165,7 @@ public class UserService implements UserDetailsService {
     }
 
     public List<UserDto> getUnassignedDepartmentManagers(UUID idOrganisation) {
-         List<User> allUsers = (List<User>) userRepository.findByIdOrganisation(idOrganisation);
+         List<User> allUsers = userRepository.findByIdOrganisation(idOrganisation);
 
         return allUsers.stream()
                 .filter(user -> user.getAuthorities().stream().anyMatch(role -> role.getAuthority().equals("DEPARTMENT_MANAGER")) && user.getIdDepartment() == null)
@@ -215,9 +216,13 @@ public class UserService implements UserDetailsService {
 
     public void removeDepartmentManagerFromDepartment(UUID userId) {
         User employee = existUser(userId);
+        Department department = departmentService.getDepartmentById(employee.getIdDepartment());
+
         employee.setIdDepartment(null);
         employee.setIsDepartmentManager(false);
         userRepository.save(employee);
+
+        departmentService.deleteDepartmentManager(department);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////

@@ -2,6 +2,7 @@ package com.usv.Team.Finder.App.dto;
 
 import com.usv.Team.Finder.App.entity.Role;
 import com.usv.Team.Finder.App.entity.Skill;
+import com.usv.Team.Finder.App.entity.User_Skill;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -45,4 +46,6 @@ public class UserDto {
     private String registrationUrl;
 
     private Set<Skill> skilsCreated;
+
+    private Set<User_Skill> userSkill;
 }

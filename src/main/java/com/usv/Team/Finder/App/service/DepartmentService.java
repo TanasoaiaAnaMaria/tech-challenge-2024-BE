@@ -105,6 +105,11 @@ public class DepartmentService {
         department.setDepartmentManager(idDepartmentManager);
         departmentRepository.save(department);
     }
+    public void deleteDepartmentManager(Department department){
+        department.setDepartmentManager(null);
+        departmentRepository.save(department);
+    }
+
 
     public void addSkill(UUID idDepartment, Skill skill){
         Department department = getDepartmentById(idDepartment);

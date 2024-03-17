@@ -11,6 +11,8 @@ public interface ApplicationConstants {
     String ERROR_MESSAGE_ROLE = "Role does not exist";
     String ERROR_MESSAGE_TEAMROLE = "Team role does not exist";
     String ERROR_MESSAGE_SKILL_CATEGORY = "Skill category does not exist";
+
+    String ERROR_MESSAGE_USER_SKILL = "User skill does not exist";
     String ERROR_MESSAGE_NO_NOTIFICATIONS = "No notification";
     String ERROR_MESSAGE_NOTIFICATION_NOT_FOUND = "Notification not exist";
     String ERROR_MESSAGE_SKILL = "Skill does not exist";

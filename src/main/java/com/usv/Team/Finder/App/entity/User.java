@@ -62,6 +62,14 @@ public class User implements UserDetails {
     @JoinColumn(name="addressedTo", referencedColumnName = "idUser")
     private Set<Skill> notifications;
 
+    @OneToMany(
+            targetEntity = User_Skill.class,
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.PERSIST
+    )
+    @JoinColumn(name="idUser", referencedColumnName = "idUser")
+    private Set<User_Skill> userSkill;
+
     public User(String eMailAdress, String password, Set<Role> authorities) {
         this.eMailAdress = eMailAdress;
         this.password = password;
