@@ -9,6 +9,7 @@ import com.usv.Team.Finder.App.repository.ProjectRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -23,6 +24,10 @@ public class ProjectService {
         this.projectTeamRoleService = projectTeamRoleService;
         this.userService = userService;
     }
+    public List<Project> getProjectsByCreator(UUID creatorId) {
+        return projectRepository.findByCreatedBy(creatorId);
+    }
+
     public Project getProjectById(UUID idProject) {
         return projectRepository.findById(idProject).orElseThrow(() ->
                 new CrudOperationException(ApplicationConstants.ERROR_MESSAGE_PROJECT));

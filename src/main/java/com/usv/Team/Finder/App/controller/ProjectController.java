@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -18,6 +19,12 @@ public class ProjectController {
 
     public ProjectController(ProjectService projectService) {
         this.projectService = projectService;
+    }
+
+    @GetMapping("/createdBy")
+    public ResponseEntity<List<Project>> getProjectsCreatedByMe(@RequestParam UUID idUser) {
+        List<Project> projects = projectService.getProjectsByCreator(idUser);
+        return ResponseEntity.ok(projects);
     }
 
     @GetMapping("/getById")
