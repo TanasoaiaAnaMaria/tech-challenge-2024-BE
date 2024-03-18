@@ -1,16 +1,19 @@
 package com.usv.Team.Finder.App.service;
 
 import com.usv.Team.Finder.App.dto.ProjectDto;
+import com.usv.Team.Finder.App.dto.Project_TeamRoleDto;
 import com.usv.Team.Finder.App.entity.Project;
+import com.usv.Team.Finder.App.entity.Project_TeamRole;
 import com.usv.Team.Finder.App.exception.CrudOperationException;
 import com.usv.Team.Finder.App.exception.FunctionalException;
 import com.usv.Team.Finder.App.repository.ApplicationConstants;
 import com.usv.Team.Finder.App.repository.ProjectRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectService {
@@ -65,4 +68,49 @@ public class ProjectService {
 
         return savedProject;
     }
+    @Transactional
+    public Project updateProject(UUID projectId, ProjectDto projectDto) {
+        Project existingProject = getProjectById(projectId);
+
+        UUID currentUserId = projectDto.getCreatedBy();
+        boolean isProjectManager = userService.isUserProjectManager(currentUserId);
+        if (!existingProject.getCreatedBy().equals(currentUserId) || !isProjectManager) {
+            throw new FunctionalException(ApplicationConstants.ERROR_UPDATE_PROJECT, HttpStatus.FORBIDDEN);
+        }
+
+        if (projectDto.getProjectStatus().equals("In Progress") || projectDto.getProjectStatus().equals("Closing") || projectDto.getProjectStatus().equals("Closed")) {
+            existingProject.setCanBeDeleted(false);
+        }
+
+        existingProject.setProjectName(projectDto.getProjectName());
+        existingProject.setProjectPeriod(projectDto.getProjectPeriod());
+        existingProject.setStartDate(projectDto.getStartDate());
+        existingProject.setDeadlineDate(projectDto.getDeadlineDate());
+        existingProject.setGeneralDescription(projectDto.getGeneralDescription());
+        existingProject.setProjectStatus(projectDto.getProjectStatus());
+
+        Set<UUID> existingTeamRoleIds = existingProject.getTeamRoles().stream()
+                .map(Project_TeamRole::getIdTeamRole)
+                .collect(Collectors.toSet());
+
+        for (Project_TeamRoleDto dto : projectDto.getTeamRoles()) {
+            if (dto.getIdTeamRole() != null && existingTeamRoleIds.contains(dto.getIdTeamRole())) {
+
+                projectTeamRoleService.updateProjectTeamRole(dto.getIdTeamRole(), dto);
+            } else if (dto.getIdTeamRole() != null) {
+
+                Project_TeamRole newTeamRole = projectTeamRoleService.addProjectTeamRole(dto);
+                existingProject.getTeamRoles().add(newTeamRole);
+            }
+        }
+
+        existingProject.getTeamRoles().removeIf(teamRole ->
+                !projectDto.getTeamRoles().stream()
+                        .map(Project_TeamRoleDto::getIdTeamRole)
+                        .toList()
+                        .contains(teamRole.getIdTeamRole()));
+
+        return projectRepository.save(existingProject);
+    }
+
 }

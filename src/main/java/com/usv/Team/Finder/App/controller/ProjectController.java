@@ -3,6 +3,7 @@ package com.usv.Team.Finder.App.controller;
 import com.usv.Team.Finder.App.dto.ProjectDto;
 import com.usv.Team.Finder.App.entity.Project;
 import com.usv.Team.Finder.App.exception.CrudOperationException;
+import com.usv.Team.Finder.App.exception.FunctionalException;
 import com.usv.Team.Finder.App.service.ProjectService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,5 +47,14 @@ public class ProjectController {
         }
     }
 
+    @PutMapping("/updateProject")
+    public ResponseEntity<?> updateProject(@RequestParam UUID projectId, @RequestBody ProjectDto projectDto) {
+        try {
+            Project updatedProject = projectService.updateProject(projectId, projectDto);
+            return ResponseEntity.ok(updatedProject);
+        } catch (FunctionalException e) {
+            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
+        }
+    }
 
 }

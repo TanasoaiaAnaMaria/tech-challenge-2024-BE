@@ -8,6 +8,7 @@ import com.usv.Team.Finder.App.repository.ProjectRepository;
 import com.usv.Team.Finder.App.repository.Project_TeamRoleRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -20,6 +21,17 @@ public class Project_TeamRoleService {
         this.projectTeamRoleRepository = projectTeamRoleRepository;
         this.projectRepository = projectRepository;
         this.teamRoleService = teamRoleService;
+    }
+
+    public Project_TeamRole getProjectTeamRoleById(UUID idProject_TeamRole) {
+        Project_TeamRole project_teamRole =  projectTeamRoleRepository.findByIdTeamRole(idProject_TeamRole).get(0);
+        if(project_teamRole == null)
+                throw new CrudOperationException(ApplicationConstants.ERROR_MESSAGE_PROJECT_TEAM_ROLE);
+        return project_teamRole;
+    }
+
+    public List<Project_TeamRole> findTeamRolesByProjectId(UUID projectId) {
+        return projectTeamRoleRepository.findByIdProiect(projectId);
     }
 
     public Project_TeamRole addProjectTeamRole(Project_TeamRoleDto projectTeamRoleDto) {
@@ -36,8 +48,17 @@ public class Project_TeamRoleService {
         return projectTeamRoleRepository.save(projectTeamRole);
     }
 
-    public Project_TeamRole getProjectTeamRoleById(UUID idProject_TeamRole) {
-        return projectTeamRoleRepository.findById(idProject_TeamRole).orElseThrow(() ->
-                new CrudOperationException(ApplicationConstants.ERROR_MESSAGE_PROJECT_TEAM_ROLE));
+    public void updateProjectTeamRole(UUID idProjectTeamRole, Project_TeamRoleDto teamRoleDto) {
+        Project_TeamRole existingTeamRole =  projectTeamRoleRepository.findByIdTeamRole(idProjectTeamRole).get(0);
+        if(existingTeamRole == null)
+            throw new CrudOperationException(ApplicationConstants.ERROR_MESSAGE_PROJECT_TEAM_ROLE);
+
+        existingTeamRole.setNumberOfMembers(teamRoleDto.getNumberOfMembers());
+
+        projectTeamRoleRepository.save(existingTeamRole);
+    }
+
+    public void deleteProjectTeamRole(UUID teamRoleId) {
+        projectTeamRoleRepository.deleteById(teamRoleId);
     }
 }

@@ -12,6 +12,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Project_TeamRoleDto {
+    private UUID idProject_TeamRole;
+
     private UUID idProiect;
 
     private String projectName;

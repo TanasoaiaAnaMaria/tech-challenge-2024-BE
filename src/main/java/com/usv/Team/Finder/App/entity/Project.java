@@ -1,5 +1,4 @@
 package com.usv.Team.Finder.App.entity;
-import com.usv.Team.Finder.App.dto.Project_TeamRoleDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -42,5 +41,5 @@ public class Project {
             cascade = CascadeType.PERSIST
     )
     @JoinColumn(name="idProiect", referencedColumnName = "idProject")
-    private List<Project_TeamRoleDto> teamRoles;
+    private List<Project_TeamRole> teamRoles;
 }

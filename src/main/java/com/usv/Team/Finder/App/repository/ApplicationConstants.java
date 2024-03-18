@@ -27,6 +27,7 @@ public interface ApplicationConstants {
     String ERROR_UPDATE_SKILL = "Unauthorized to update skill";
     String ERROR_DELETE_SKILL = "Unauthorized to delete skill";
     String ERROR_CREATE_PROJECT = "Unauthorized to create project";
+    String ERROR_UPDATE_PROJECT = "Unauthorized to update project";
     String ERROR_DELETE_PROJECT = "Unauthorized to delete project";
     String ERROR_SKILL_IN_USE_BY_DEPARTMENTS = "Skill cannot be deleted because it is used in departments";
     String ERROR_NOT_DEPARTMENT_MANAGER = "You are not authorized to perform this action as you are not a department manager.";
