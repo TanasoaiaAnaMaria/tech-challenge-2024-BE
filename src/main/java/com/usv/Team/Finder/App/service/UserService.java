@@ -171,8 +171,8 @@ public class UserService implements UserDetailsService {
          List<User> allUsers = userRepository.findByIdOrganisation(idOrganisation);
 
         return allUsers.stream()
-                .filter(user -> user.getAuthorities().stream().anyMatch(role -> role.getAuthority().equals("DEPARTMENT_MANAGER")) && user.getIdDepartment() == null)
-                .map(user -> getUserById(user.getIdUser())) // Apelăm getUserById pentru fiecare user filtrat
+                .filter(user -> user.getAuthorities().stream().anyMatch(role -> role.getAuthority().equals("DEPARTMENT_MANAGER")) && !user.getIsDepartmentManager())
+                .map(user -> getUserById(user.getIdUser()))
                 .collect(Collectors.toList());
     }
 
@@ -274,6 +274,10 @@ public class UserService implements UserDetailsService {
             return departmentService.getDepartmentById(departmentId).getDepartmentName();
         }
         return null;
+    }
+    public boolean isUserProjectManager(UUID userId) {
+        User user = userRepository.findById(userId).orElseThrow();
+        return user.getAuthorities().stream().anyMatch(role -> role.getAuthority().equals("PROJECT_MANAGER"));
     }
 
     private String getDepartmentManagerName(UUID departmentId) {
