@@ -1,6 +1,7 @@
 package com.usv.Team.Finder.App.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.usv.Team.Finder.App.dto.User_SkillDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.userdetails.UserDetails;
