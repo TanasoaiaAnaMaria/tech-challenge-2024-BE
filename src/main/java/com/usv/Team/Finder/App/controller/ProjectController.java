@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.sound.midi.spi.MidiDeviceProvider;
 import java.util.List;
 import java.util.UUID;
 
@@ -48,13 +49,22 @@ public class ProjectController {
     }
 
     @PutMapping("/updateProject")
-    public ResponseEntity<?> updateProject(@RequestParam UUID projectId, @RequestBody ProjectDto projectDto) {
+    public ResponseEntity<?> updateProject(@RequestParam UUID idProject, @RequestBody ProjectDto projectDto) {
         try {
-            Project updatedProject = projectService.updateProject(projectId, projectDto);
+            Project updatedProject = projectService.updateProject(idProject, projectDto);
             return ResponseEntity.ok(updatedProject);
         } catch (FunctionalException e) {
             return ResponseEntity.status(e.getStatus()).body(e.getMessage());
         }
     }
 
+    @DeleteMapping("/deleteProject")
+    public ResponseEntity<?> deleteProject(@RequestParam UUID idProject, @RequestParam UUID idUser) {
+        try {
+            projectService.deleteProjectIfEligible(idProject, idUser);
+            return ResponseEntity.ok().build();
+        } catch (CrudOperationException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 }

@@ -2,8 +2,10 @@ package com.usv.Team.Finder.App.service;
 
 import com.usv.Team.Finder.App.dto.ProjectDto;
 import com.usv.Team.Finder.App.dto.Project_TeamRoleDto;
+import com.usv.Team.Finder.App.entity.Department;
 import com.usv.Team.Finder.App.entity.Project;
 import com.usv.Team.Finder.App.entity.Project_TeamRole;
+import com.usv.Team.Finder.App.entity.User;
 import com.usv.Team.Finder.App.exception.CrudOperationException;
 import com.usv.Team.Finder.App.exception.FunctionalException;
 import com.usv.Team.Finder.App.repository.ApplicationConstants;
@@ -111,6 +113,21 @@ public class ProjectService {
                         .contains(teamRole.getIdTeamRole()));
 
         return projectRepository.save(existingProject);
+    }
+
+    public void deleteProjectIfEligible(UUID projectId, UUID userId) {
+        Project project = getProjectById(projectId);
+
+        boolean isProjectManager = userService.isUserProjectManager(userId);
+        if (!project.getCreatedBy().equals(userId) || !isProjectManager) {
+            throw new FunctionalException(ApplicationConstants.ERROR_DELETE_PROJECT, HttpStatus.FORBIDDEN);
+        }
+
+        if (!project.getCanBeDeleted()) {
+            throw new FunctionalException(ApplicationConstants.ERROR_DELETE_PROJECT, HttpStatus.BAD_REQUEST);
+        }
+
+        projectRepository.deleteById(projectId);
     }
 
 }
