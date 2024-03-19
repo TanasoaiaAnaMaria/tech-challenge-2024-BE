@@ -47,7 +47,7 @@ public class DepartmentController {
         return new ResponseEntity<>(department, HttpStatus.CREATED);
     }
 
-    @PutMapping("/updateDepartent")
+    @PutMapping("/updateDepartment")
     @PreAuthorize("hasRole('ORGANISATION_ADMIN')")
     public ResponseEntity<Department> updateDepartment(@RequestParam UUID idDepartment, @RequestBody DepartmentDto departmentDto){
         Department department = departmentService.updateDepartment(idDepartment, departmentDto);

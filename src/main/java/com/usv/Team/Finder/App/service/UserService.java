@@ -5,10 +5,12 @@ import com.usv.Team.Finder.App.dto.UserDto;
 import com.usv.Team.Finder.App.entity.Department;
 import com.usv.Team.Finder.App.entity.Role;
 import com.usv.Team.Finder.App.entity.User;
+import com.usv.Team.Finder.App.entity.User_Skill;
 import com.usv.Team.Finder.App.exception.CrudOperationException;
 import com.usv.Team.Finder.App.exception.FunctionalException;
 import com.usv.Team.Finder.App.repository.ApplicationConstants;
 import com.usv.Team.Finder.App.repository.UserRepository;
+import com.usv.Team.Finder.App.repository.User_SkillRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,12 +26,14 @@ public class UserService implements UserDetailsService {
     private final OrganisationService organisationService;
     private final DepartmentService departmentService;
     private final RoleService roleService;
+    private final User_SkillRepository userSkillRepository;
 
-    public UserService(UserRepository userRepository, OrganisationService organisationService, DepartmentService departmentService, RoleService roleService) {
+    public UserService(UserRepository userRepository, OrganisationService organisationService, DepartmentService departmentService, RoleService roleService, User_SkillRepository userSkillRepository) {
         this.userRepository = userRepository;
         this.organisationService = organisationService;
         this.departmentService = departmentService;
         this.roleService = roleService;
+        this.userSkillRepository = userSkillRepository;
     }
 
     @Override
@@ -90,6 +94,8 @@ public class UserService implements UserDetailsService {
             }
         }
 
+        Set<User_Skill> userSkillDto = userSkillRepository.findByIdUser(idUser);
+
         return UserDto.builder()
                 .idUser(user.getIdUser())
                 .firstName(user.getFirstName())
@@ -106,7 +112,7 @@ public class UserService implements UserDetailsService {
                 .OrganisationAdminNames(organisationAdminNames)
                 .registrationUrl(registrationUrl)
                 .skilsCreated(user.getSkilsCreated())
-                .userSkill(user.getUserSkill())
+                .userSkill(userSkillDto)
                 .build();
     }
 
@@ -159,6 +165,9 @@ public class UserService implements UserDetailsService {
             throw new CrudOperationException(ApplicationConstants.ERROR_ROLE_NOT_FOUND_FOR_USER);
         }
 
+        if(user.getIsDepartmentManager())
+            removeDepartmentManagerFromDepartment(user.getIdUser());
+
         userRepository.save(user);
 
         getUserById(user.getIdUser());
@@ -168,8 +177,8 @@ public class UserService implements UserDetailsService {
          List<User> allUsers = userRepository.findByIdOrganisation(idOrganisation);
 
         return allUsers.stream()
-                .filter(user -> user.getAuthorities().stream().anyMatch(role -> role.getAuthority().equals("DEPARTMENT_MANAGER")) && user.getIdDepartment() == null)
-                .map(user -> getUserById(user.getIdUser())) // Apelăm getUserById pentru fiecare user filtrat
+                .filter(user -> user.getAuthorities().stream().anyMatch(role -> role.getAuthority().equals("DEPARTMENT_MANAGER")) && !user.getIsDepartmentManager())
+                .map(user -> getUserById(user.getIdUser()))
                 .collect(Collectors.toList());
     }
 
@@ -271,6 +280,10 @@ public class UserService implements UserDetailsService {
             return departmentService.getDepartmentById(departmentId).getDepartmentName();
         }
         return null;
+    }
+    public boolean isUserProjectManager(UUID userId) {
+        User user = userRepository.findById(userId).orElseThrow();
+        return user.getAuthorities().stream().anyMatch(role -> role.getAuthority().equals("PROJECT_MANAGER"));
     }
 
     private String getDepartmentManagerName(UUID departmentId) {
