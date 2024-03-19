@@ -91,8 +91,12 @@ public class DepartmentService {
     }
 
     public void deleteDepartment(UUID idDepartment){
-        if(departmentRepository.findById(idDepartment).isEmpty())
-            throw new CrudOperationException(ApplicationConstants.ERROR_MESSAGE_DEPARTMENT);
+        Department existingDepartment =  departmentRepository.findById(idDepartment).orElseThrow(()->
+                new CrudOperationException(ApplicationConstants.ERROR_MESSAGE_DEPARTMENT));
+
+        if (!existingDepartment.getUsers().isEmpty()) {
+            throw new FunctionalException(ApplicationConstants.ERROR_DEPARTMENT_HAS_USERS , HttpStatus.CONFLICT);
+        }
 
         departmentRepository.deleteById(idDepartment);
     }
