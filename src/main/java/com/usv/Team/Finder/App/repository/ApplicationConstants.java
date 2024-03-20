@@ -34,4 +34,6 @@ public interface ApplicationConstants {
     String ERROR_NOT_DEPARTMENT_MANAGER = "You are not authorized to perform this action as you are not a department manager.";
     String ERROR_SKILL_ALREADY_IN_DEPARTMENT = "This skill is already added to your department.";
     String ERROR_SKILL_NOT_IN_DEPARTMENT = "This skill is not part of your department.";
+    String ERROR_MESSAGE_PROJECT_ASSIGNMENT = "Project assignment does not exist";
+    String ERROR_MESSAGE_USER_OVERASSIGNED = "the server does not have enough hours available";
 }

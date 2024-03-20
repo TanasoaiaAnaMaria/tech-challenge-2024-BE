@@ -14,5 +14,4 @@ public interface UserRepository extends CrudRepository<User, UUID> {
     Optional<User> findByeMailAdress(String eMailAdress);
     List<User> findByIdOrganisation(UUID idOrganisation);
     List<User> findByIdDepartment(UUID idDepartment);
-    List<User> findByidDepartmentManager(UUID idDepartmentManager);
 }
