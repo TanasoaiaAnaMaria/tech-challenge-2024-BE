@@ -10,4 +10,5 @@ import java.util.UUID;
 @Repository
 public interface ProjectRepository  extends CrudRepository<Project, UUID> {
     List<Project> findByCreatedBy(UUID createdBy);
+    List<Project> findByIdOrganisation(UUID idOrganisation);
 }
