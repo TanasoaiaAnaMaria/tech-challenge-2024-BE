@@ -1,6 +1,7 @@
 package com.usv.Team.Finder.App.controller;
 
 import com.usv.Team.Finder.App.dto.OrganisationDto;
+import com.usv.Team.Finder.App.dto.OrganisationStatisticsDto;
 import com.usv.Team.Finder.App.entity.Organisation;
 import com.usv.Team.Finder.App.exception.CrudOperationException;
 import com.usv.Team.Finder.App.service.OrganisationService;
@@ -38,5 +39,15 @@ public class OrganisationController {
 
         organisationService.updateOrganisationHeadquarterAddress(idOrganisation, newHeadquarterAddress);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/statistics")
+    public ResponseEntity<OrganisationStatisticsDto> getOrganisationStatistics(@RequestParam UUID idOrganisation) {
+        try {
+            OrganisationStatisticsDto statistics = organisationService.getOrganisationStatistics(idOrganisation);
+            return ResponseEntity.ok(statistics);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }

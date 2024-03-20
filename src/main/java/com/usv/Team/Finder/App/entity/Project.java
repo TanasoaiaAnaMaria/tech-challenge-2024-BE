@@ -42,4 +42,12 @@ public class Project {
     )
     @JoinColumn(name="idProiect", referencedColumnName = "idProject")
     private List<Project_TeamRole> teamRoles;
+
+    @OneToMany(
+            targetEntity = ProjectAssignment.class,
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.PERSIST
+    )
+    @JoinColumn(name="idProiect", referencedColumnName = "idProject")
+    private List<Project_TeamRole> projectAssignment;
 }

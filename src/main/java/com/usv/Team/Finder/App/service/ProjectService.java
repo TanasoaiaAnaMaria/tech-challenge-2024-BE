@@ -29,6 +29,11 @@ public class ProjectService {
         this.projectTeamRoleService = projectTeamRoleService;
         this.userService = userService;
     }
+
+    public List<Project> getProjectsPerOrganisation(UUID idOrganisation) {
+        return projectRepository.findByIdOrganisation(idOrganisation);
+    }
+
     public List<Project> getProjectsByCreator(UUID creatorId) {
         return projectRepository.findByCreatedBy(creatorId);
     }
